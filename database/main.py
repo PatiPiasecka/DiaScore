@@ -28,7 +28,7 @@ def import_csv_to_db(csv_file_path: str):
             db.add(db_record)
         
         db.commit()
-        print("Import was succesful")
+        print("Import was successful")
         
     except Exception as e:
         print(f"There was an error during import: {e}")

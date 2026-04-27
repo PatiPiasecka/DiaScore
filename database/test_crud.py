@@ -1,6 +1,6 @@
 import pytest
-from database import SessionLocal
-import crud
+from database.database import SessionLocal
+from database import crud
 
 # Fixture that sets up the database session before the tests run
 # and safely closes it after they complete.
