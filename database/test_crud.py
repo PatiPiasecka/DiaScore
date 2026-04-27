@@ -1,7 +1,6 @@
 import pytest
-from database import SessionLocal
-import crud
-import models
+from database.database import SessionLocal
+from database import crud, models
 
 
 # Creates a fresh DB session for each test and rolls back everything after

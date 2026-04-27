@@ -32,7 +32,11 @@ def import_csv_to_db(csv_file_path: str):
 
         db.commit()
         print("Import was successful")
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> 5910631222ed336979c3e90570a958f7a6df007b
     except Exception as e:
         print(f"There was an error during import: {e}")
         db.rollback()
