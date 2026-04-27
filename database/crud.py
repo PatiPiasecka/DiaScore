@@ -3,13 +3,13 @@ from sqlalchemy.orm import Session
 from . import models
 from . import schemas
 
-def get_record(db: Session, record_id: int):
+def get_record(db: Session, record_id: int) -> models.DiabetesRecord | None:
     return db.query(models.DiabetesRecord).filter(models.DiabetesRecord.id == record_id).first()
 
-def get_records(db: Session, skip: int = 0, limit: int = 100):
+def get_records(db: Session, skip: int = 0, limit: int = 100) -> list[models.DiabetesRecord]:
     return db.query(models.DiabetesRecord).offset(skip).limit(limit).all()
 
-def create_diabetes_record(db: Session, record: schemas.DiabetesCreate):
+def create_diabetes_record(db: Session, record: schemas.DiabetesCreate) -> int:
     db_record = models.DiabetesRecord(**record.model_dump())
     try:
         db.add(db_record)
@@ -20,5 +20,5 @@ def create_diabetes_record(db: Session, record: schemas.DiabetesCreate):
         db.rollback()  # Rollback in case of an error
         raise e
 
-def get_patient_count(db: Session):
+def get_patient_count(db: Session) -> models.DiabetesRecord:
     return db.query(models.DiabetesRecord).count()
