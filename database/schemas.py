@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class DiabetesBase(BaseModel):
     pregnancies: int
@@ -17,5 +17,4 @@ class DiabetesCreate(DiabetesBase):
 class Diabetes(DiabetesBase):
     id: int
 
-    class Config:
-        from_attributes = True # Pozwala na współpracę z SQLAlchemy
+    model_config = ConfigDict(from_attributes=True)

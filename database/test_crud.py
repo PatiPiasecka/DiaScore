@@ -8,14 +8,10 @@ from database import crud, models
 @pytest.fixture(scope="function")
 def db_session():
     db = SessionLocal()
-    connection = db.connection()
-    transaction = connection.begin()
 
     try:
         yield db
     finally:
-        transaction.rollback()
-        connection.close()
         db.close()
 
 
