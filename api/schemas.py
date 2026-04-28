@@ -7,7 +7,7 @@ class DiabetesBase(BaseModel):
     blood_pressure: int = Field(..., ge=0, le=300, description="Diastolic blood pressure (mm Hg)")
     skin_thickness: int = Field(..., ge=0, le=100, description="Triceps skin fold thickness (mm)")
     insulin: int = Field(..., ge=0, le=1000, description="2-Hour serum insulin (mu U/ml)")
-    bmi: float = Field(..., gt=0, le=100, description="Body mass index (weight in kg/(height in m)^2)")
+    bmi: float = Field(..., ge=0, le=100, description="Body mass index (weight in kg/(height in m)^2)")
     diabetes_pedigree_function: float = Field(..., gt=0, description="Diabetes pedigree function (genetic score)")
     age: int = Field(..., ge=0, le=120, description="Patient age (years)")
 
