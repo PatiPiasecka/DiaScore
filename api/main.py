@@ -52,9 +52,10 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     """
     # ML MODEL LOGIC (Placeholder)
     mock_risk = 1 if data.glucose > 140 else 0
-    crud.create_diabetes_record(db=db, record=data, outcome=mock_risk)
+    db_record = crud.create_diabetes_record(db=db, record=data, outcome=mock_risk)
     
     return schemas.DiabetesPrediction(
+        id=db_record.id,
         risk_score=mock_risk,
         is_diabetic_risk=mock_risk > 0.5
     )

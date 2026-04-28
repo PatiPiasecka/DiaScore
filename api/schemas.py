@@ -28,6 +28,7 @@ class DiabetesRecord(DiabetesBase):
 
 class DiabetesPrediction(BaseModel):
     # Response from our AI Model
+    id: int
     risk_score: float = Field(..., description="Probability of diabetes")
     is_diabetic_risk: bool = Field(...)
 
