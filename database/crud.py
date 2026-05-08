@@ -7,10 +7,12 @@ def get_record(db: Session, record_id: int) -> models.DiabetesRecord | None:
     return db.query(models.DiabetesRecord).filter(models.DiabetesRecord.id == record_id).first()
 
 def get_records(db: Session, skip: int = 0, limit: int = 100) -> list[models.DiabetesRecord]:
-    return db.query(models.DiabetesRecord).offset(skip).limit(limit).all()
+    return db.query(models.DiabetesRecord).order_by(models.DiabetesRecord.id.desc()).offset(skip).limit(limit).all()
 
-def create_diabetes_record(db: Session, record: schemas.DiabetesCreate) -> int:
-    db_record = models.DiabetesRecord(**record.model_dump())
+def create_diabetes_record(db: Session, record: schemas.DiabetesCreate, outcome: int) -> int:
+    data_dict = record.model_dump()
+    data_dict["outcome"] = outcome
+    db_record = models.DiabetesRecord(**data_dict)
     try:
         db.add(db_record)
         db.commit()
