@@ -11,6 +11,8 @@ TEST_DB = "./database/test_diabetes.db"
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{TEST_DB}"
 
 pytest.fixture(scope="module", autouse=True)
+
+
 def setup_test_db():
     # Copy original database
     if os.path.exists(ORIGINAL_DB):
@@ -25,18 +27,21 @@ def setup_test_db():
     if os.path.exists(TEST_DB):
         os.remove(TEST_DB)
 
+
 @pytest.fixture(scope="module")
 def override_get_db():
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    
+
     def _get_test_db():
         db = TestingSessionLocal()
         try:
             yield db
         finally:
             db.close()
-    
+
     app.dependency_overrides[get_db] = _get_test_db
     yield
     app.dependency_overrides.clear()

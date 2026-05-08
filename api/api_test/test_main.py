@@ -1,19 +1,22 @@
-import pytest
 from fastapi.testclient import TestClient
 from api.main import app
 
 # TODO: test outcome of prediction by model
 
 client = TestClient(app)
+
+
 def test_read_root():
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to DiaScore API"}
 
+
 def test_read_records_list():
     response = client.get("/records/")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+
 
 def test_read_single_record_not_found():
     response = client.get("/records/")
@@ -28,11 +31,17 @@ def test_read_single_record_not_found():
     assert response.status_code == 404
     assert response.json()["detail"] == "Patient record not found"
 
+
 def test_create_and_then_read_record():
     new_data = {
-        "pregnancies": 0, "glucose": 100, "blood_pressure": 70,
-        "skin_thickness": 20, "insulin": 50, "bmi": 22.0,
-        "diabetes_pedigree_function": 0.1, "age": 25
+        "pregnancies": 0,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.1,
+        "age": 25,
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -41,7 +50,7 @@ def test_create_and_then_read_record():
     record_id = created_record["id"]
 
     get_response = client.get(f"/records/{record_id}")
-    
+
     assert get_response.status_code == 200
     fetched_data = get_response.json()
 
@@ -51,6 +60,7 @@ def test_create_and_then_read_record():
         assert fetched_data[key] == value
 
     assert "outcome" in fetched_data
+
 
 def test_database_updates_immediately():
     initial_response = client.get("/records/")
@@ -64,10 +74,10 @@ def test_database_updates_immediately():
         "insulin": 0,
         "bmi": 99.9,
         "diabetes_pedigree_function": 0.5,
-        "age": 40
+        "age": 40,
     }
 
-    post_response = client.post("/predict/", json = new_data)
+    post_response = client.post("/predict/", json=new_data)
     created_id = post_response.json()["id"]
     assert post_response.status_code == 201
 
@@ -77,13 +87,19 @@ def test_database_updates_immediately():
     assert new_top_id == created_id
     assert new_top_id != initial_top_id
 
+
 def test_new_record_is_at_the_top_of_history():
     # unique glucose
-    test_glucose = 999 
+    test_glucose = 999
     new_data = {
-        "pregnancies": 0, "glucose": test_glucose, "blood_pressure": 80,
-        "skin_thickness": 0, "insulin": 0, "bmi": 25.0,
-        "diabetes_pedigree_function": 0.5, "age": 30
+        "pregnancies": 0,
+        "glucose": test_glucose,
+        "blood_pressure": 80,
+        "skin_thickness": 0,
+        "insulin": 0,
+        "bmi": 25.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -94,6 +110,6 @@ def test_new_record_is_at_the_top_of_history():
     records = history_response.json()
 
     first_record = records[0]
-    
+
     assert first_record["id"] == created_id
     assert first_record["glucose"] == test_glucose

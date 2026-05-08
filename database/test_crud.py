@@ -28,7 +28,7 @@ def seed_record(db_session):
         bmi=26.5,
         diabetes_pedigree_function=0.45,
         age=30,
-        outcome=0
+        outcome=0,
     )
 
     db_session.add(record)
