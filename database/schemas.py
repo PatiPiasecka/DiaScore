@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 
+
 class DiabetesBase(BaseModel):
     pregnancies: int
     glucose: int
@@ -11,8 +12,10 @@ class DiabetesBase(BaseModel):
     age: int
     outcome: int
 
+
 class DiabetesCreate(DiabetesBase):
     pass
+
 
 class Diabetes(DiabetesBase):
     id: int

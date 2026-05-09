@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Float
 from .database import Base
 
+
 class DiabetesRecord(Base):
     __tablename__ = "diabetes_records"
 
@@ -13,4 +14,4 @@ class DiabetesRecord(Base):
     bmi = Column(Float)
     diabetes_pedigree_function = Column(Float)
     age = Column(Integer)
-    outcome = Column(Integer) # 0 lub 1
+    outcome = Column(Integer)  # 0 lub 1
