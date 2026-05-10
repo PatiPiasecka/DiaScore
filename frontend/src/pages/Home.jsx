@@ -32,11 +32,26 @@ function App() {
     let newErrors = {}
     const integerFields = ['pregnancies', 'glucose', 'blood_pressure', 'skin_thickness', 'insulin', 'age']
 
+    const maxLimits = {
+      blood_pressure: 300,
+      glucose: 500,
+      skin_thickness: 100,
+      insulin: 1000,
+      bmi: 100,
+      age: 120,
+      glucose: 500,
+      pregnancies: 20
+    }
+
     Object.keys(formData).forEach(key => {
       const value = formData[key]
 
       if (value < 0) {
         newErrors[key] = "Value should not be negative"
+      }
+
+      if (maxLimits[key] && value > maxLimits[key]){
+        newErrors[key] = `Value cannot exceed ${maxLimits[key]}`
       }
 
       if (integerFields.includes(key) && !Number.isInteger(Number(value))){
@@ -99,13 +114,13 @@ function App() {
                 <h3 className="text-white uppercase text-s font-bold tracking-widest mb-4">Medical Parameters</h3>
 
                 {[
-                  { label: 'Pregnancies', name: 'pregnancies' },
-                  { label: 'Glucose', name: 'glucose' },
-                  { label: 'Blood Pressure', name: 'blood_pressure' },
-                  { label: 'Skin Thickness', name: 'skin_thickness' },
-                  { label: 'Insulin', name: 'insulin' },
-                  { label: 'BMI', name: 'bmi' },
-                  { label: 'Age', name: 'age' },
+                  { label: 'Pregnancies', name: 'pregnancies', max:20},
+                  { label: 'Glucose (mg/dL)', name: 'glucose', max:500},
+                  { label: 'Blood Pressure (mmHg)', name: 'blood_pressure', max:300},
+                  { label: 'Skin Thickness (mm)', name: 'skin_thickness', max:100},
+                  { label: 'Insulin (µU/mL)', name: 'insulin', max:1000},
+                  { label: 'BMI', name: 'bmi', max:100},
+                  { label: 'Age', name: 'age', max:120},
                 ].map((field) => (
                     <div key={field.name} className="flex flex-col mb-4">
                       <label className="text-sm font-medium text-white mb-2 ml-1">
@@ -116,6 +131,7 @@ function App() {
                           <input
                           type="number"
                           min="0"
+                          max={field.max}
                           name={field.name}
                           value={formData[field.name]}
                           onChange={handleChange}
