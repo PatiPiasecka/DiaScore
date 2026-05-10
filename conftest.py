@@ -1,18 +1,19 @@
 import pytest
 import shutil
 import os
+from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database.database import Base
+
+from database.models import Base
 from api.main import app, get_db
 
 ORIGINAL_DB = "./database/diabetes.db"
 TEST_DB = "./database/test_diabetes.db"
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{TEST_DB}"
 
-pytest.fixture(scope="module", autouse=True)
 
-
+@pytest.fixture(scope="session", autouse=True)
 def setup_test_db():
     # Copy original database
     if os.path.exists(ORIGINAL_DB):
@@ -28,8 +29,8 @@ def setup_test_db():
         os.remove(TEST_DB)
 
 
-@pytest.fixture(scope="module")
-def override_get_db():
+@pytest.fixture(scope="function")
+def client():
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
@@ -43,5 +44,20 @@ def override_get_db():
             db.close()
 
     app.dependency_overrides[get_db] = _get_test_db
-    yield
+
+    with TestClient(app) as c:
+        yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture(scope="function")
+def db_session():
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

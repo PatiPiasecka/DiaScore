@@ -1,18 +1,5 @@
 import pytest
-from database.database import SessionLocal
 from database import crud, models
-
-
-# Creates a fresh DB session for each test and rolls back everything after
-# to ensure full isolation between tests.
-@pytest.fixture(scope="function")
-def db_session():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 # Optional helper fixture to insert a known test record

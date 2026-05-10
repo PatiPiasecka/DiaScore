@@ -1,24 +1,19 @@
-from fastapi.testclient import TestClient
-from api.main import app
-
 # TODO: test outcome of prediction by model
 
-client = TestClient(app)
 
-
-def test_read_root():
+def test_read_root(client):
     response = client.get("/")
     assert response.status_code == 200
     assert response.json() == {"message": "Welcome to DiaScore API"}
 
 
-def test_read_records_list():
+def test_read_records_list(client):
     response = client.get("/records/")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
 
 
-def test_read_single_record_not_found():
+def test_read_single_record_not_found(client):
     response = client.get("/records/")
     current_records = response.json()
 
@@ -32,7 +27,7 @@ def test_read_single_record_not_found():
     assert response.json()["detail"] == "Patient record not found"
 
 
-def test_create_and_then_read_record():
+def test_create_and_then_read_record(client):
     new_data = {
         "pregnancies": 0,
         "glucose": 100,
@@ -62,7 +57,7 @@ def test_create_and_then_read_record():
     assert "outcome" in fetched_data
 
 
-def test_database_updates_immediately():
+def test_database_updates_immediately(client):
     initial_response = client.get("/records/")
     initial_top_id = initial_response.json()[0]["id"] if initial_response.json() else 0
 
@@ -88,7 +83,7 @@ def test_database_updates_immediately():
     assert new_top_id != initial_top_id
 
 
-def test_new_record_is_at_the_top_of_history():
+def test_new_record_is_at_the_top_of_history(client):
     # unique glucose
     test_glucose = 999
     new_data = {
