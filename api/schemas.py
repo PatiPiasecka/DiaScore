@@ -1,5 +1,4 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Optional
 
 
 class DiabetesBase(BaseModel):
@@ -24,10 +23,7 @@ class DiabetesBase(BaseModel):
 
 
 class DiabetesCreate(DiabetesBase):
-    # Schema for incoming data from the doctor (POST)
-    outcome: Optional[int] = Field(
-        None, ge=0, le=1, description="Result: (0: No, 1: Yes)"
-    )
+    pass
 
 
 class DiabetesRecord(DiabetesBase):
