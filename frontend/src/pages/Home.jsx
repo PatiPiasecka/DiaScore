@@ -50,20 +50,20 @@ function App() {
         newErrors[key] = "Value should not be negative"
       }
 
-      if (maxLimits[key] && value > maxLimits[key]){
+      if (maxLimits[key] && value > maxLimits[key]) {
         newErrors[key] = `Value cannot exceed ${maxLimits[key]}`
       }
 
-      if (integerFields.includes(key) && !Number.isInteger(Number(value))){
+      if (integerFields.includes(key) && !Number.isInteger(Number(value))) {
         newErrors[key] = "Value should be integer"
       }
 
-      if (key !== 'pregnancies' && (value===0 || value === "")){
+      if (key !== 'pregnancies' && (value === 0 || value === "")) {
         newErrors[key] = "Value should be greater than 0"
       }
     })
     setErrors(newErrors)
-    return Object.keys(newErrors).length===0
+    return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e) => {
@@ -93,6 +93,43 @@ function App() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const addMember = () => {
+    if (familyMembers.length >= 15) {
+      alert("You can add maximum 15 family members.");
+      return;
+    }
+    if (currentMember.relationship === 'parent') {
+      const parentCount = familyMembers.filter(m => m.relationship === 'parent').length;
+      if (parentCount >= 2) {
+        alert("You can add maximum 2 parents.");
+        return;
+      }
+    }
+    if (currentMember.relationship === 'grandparent') {
+      const gpCount = familyMembers.filter(m => m.relationship === 'grandparent').length;
+      if (gpCount >= 4) {
+        alert("You can add maximum 4 grandparents.");
+        return;
+      }
+    }
+
+    setFamilyMembers([...familyMembers, { ...currentMember, id: Date.now() }])
+    setCurrentMember({ relationship: 'parent', earlyOnset: false, otherDiseases: [] })
+  }
+
+  const removeMember = (id) => {
+    setFamilyMembers(familyMembers.filter(m => m.id !== id))
+  }
+
+  const toggleDisease = (disease) => {
+    setCurrentMember(prev => ({
+      ...prev,
+      otherDiseases: prev.otherDiseases.includes(disease)
+        ? prev.otherDiseases.filter(d => d !== disease)
+        : [...prev.otherDiseases, disease]
+    }))
   }
 
   return (
