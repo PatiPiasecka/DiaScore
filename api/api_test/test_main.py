@@ -85,7 +85,7 @@ def test_database_updates_immediately(client):
 
 def test_new_record_is_at_the_top_of_history(client):
     # unique glucose
-    test_glucose = 999
+    test_glucose = 500
     new_data = {
         "pregnancies": 0,
         "glucose": test_glucose,
