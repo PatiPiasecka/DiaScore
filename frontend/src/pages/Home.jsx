@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Gauge from '../components/Gauge'
 
 function App() {
   const [formData, setFormData] = useState({
@@ -83,13 +84,19 @@ function App() {
     }
     setLoading(true);
 
+    // Convert formData to valid numbers, especially handling empty strings
+    const payload = {};
+    for (const key in formData) {
+      payload[key] = formData[key] === "" ? 0 : Number(formData[key]);
+    }
+
     try {
       const response = await fetch('http://localhost:8000/predict/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) throw new Error("Api Error")
@@ -154,7 +161,7 @@ function App() {
         </div>
 
         {/* FORM  */}
-        <div className="w-full bg-brand-red border border-brand-pink rounded-[40px] p-8 lg:p-12 shadow-2xl transition-all duration-500">
+        <div className="w-full bg-brand-red border border-brand-pink rounded-[40px] p-8 lg:p-12 shadow-2xl transition-all duration-1000 overflow-hidden">
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
@@ -379,9 +386,102 @@ function App() {
             </div>
           </form>
 
-          {/* TODO: Visualization of prediction*/}
+          {/* Visualization of prediction */}
+          {prediction && (
+            <div className="w-full mt-10 border-t border-brand-pink/20 pt-10 transition-all duration-1000 animate-fade-in">
+              <div className="w-full bg-brand-brown rounded-[30px] p-8 lg:p-10 shadow-inner grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
+                {/* LEFT SIDE: GAUGE */}
+                <div className="flex flex-col items-center border-b lg:border-b-0 lg:border-r border-brand-pink/10 pb-10 lg:pb-0 lg:pr-10">
+                  <h2 className="text-3xl font-black text-center text-white tracking-tight mb-2">Prediction Result</h2>
+                  <Gauge percentage={Math.round(prediction.risk_score * 100)} />
+                </div>
+
+                {/* RIGHT SIDE: RECOMMENDATIONS */}
+                <div className="flex flex-col space-y-6 pl-0 lg:pl-4">
+                  <div>
+                    <h3 className="text-sm font-bold text-brand-orange tracking-widest uppercase mb-2">Next Steps</h3>
+                    <h4 className="text-2xl font-bold text-white">Recommendations</h4>
+                  </div>
+
+                  <div className="space-y-4">
+                    {prediction.risk_score * 100 > 66 ? (
+                      <>
+                        <div className="bg-white/5 p-4 rounded-xl border border-brand-pink/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-brand-pink/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-brand-pink font-bold">1</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Consult a Healthcare Provider</p>
+                            <p className="text-white/60 text-sm">Please schedule an appointment with your doctor to discuss these results and get a professional diagnosis.</p>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-xl border border-brand-pink/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-brand-pink/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-brand-pink font-bold">2</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Schedule Blood Tests</p>
+                            <p className="text-white/60 text-sm">Comprehensive metabolic panel and HbA1c tests are highly recommended to verify your glucose levels.</p>
+                          </div>
+                        </div>
+                      </>
+                    ) : prediction.risk_score * 100 > 33 ? (
+                      <>
+                        <div className="bg-white/5 p-4 rounded-xl border border-yellow-400/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-yellow-400/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-yellow-400 font-bold">1</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Monitor Your Diet</p>
+                            <p className="text-white/60 text-sm">Focus on a balanced diet with lower sugar and carbohydrate intake. Consider tracking your meals.</p>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-xl border border-yellow-400/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-yellow-400/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-yellow-400 font-bold">2</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Increase Physical Activity</p>
+                            <p className="text-white/60 text-sm">Aim for at least 150 minutes of moderate aerobic activity every week to improve insulin sensitivity.</p>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="bg-white/5 p-4 rounded-xl border border-green-400/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-green-400 font-bold">✓</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Maintain Healthy Lifestyle</p>
+                            <p className="text-white/60 text-sm">Your risk is low. Continue your current habits regarding diet and exercise to stay healthy.</p>
+                          </div>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-xl border border-green-400/20 flex gap-4 items-start">
+                          <div className="w-8 h-8 rounded-full bg-green-400/20 flex items-center justify-center shrink-0 mt-1">
+                            <span className="text-green-400 font-bold">✓</span>
+                          </div>
+                          <div>
+                            <p className="text-white font-bold mb-1">Routine Check-ups</p>
+                            <p className="text-white/60 text-sm">Keep up with your standard annual medical exams to monitor your baseline health metrics.</p>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* MEDICAL DISCLAIMER */}
+              <p className="mt-6 text-center text-[11px] leading-relaxed text-white/40 max-w-3xl mx-auto">
+                <strong className="text-white/60">Disclaimer:</strong> The DiaScore prediction is generated by a machine learning algorithm for informational purposes only and does not constitute a professional medical diagnosis. We assume no liability or responsibility for any decisions made based on these results. Always consult with a qualified healthcare provider regarding your health and medical conditions.
+              </p>
+            </div>
+          )}
         </div>
+
       </main>
     </div>
   );
