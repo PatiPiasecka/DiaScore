@@ -1,12 +1,13 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import Optional
 
 
 class DiabetesBase(BaseModel):
-    pregnancies: int = Field(..., ge=0, description="Count of pregnacies")
-    glucose: int = Field(..., ge=0, description="Plasma glucose concentration (mg/dL)")
+    pregnancies: int = Field(..., ge=0, le=20, description="Count of pregnacies")
+    glucose: int = Field(
+        ..., ge=0, le=500, description="Plasma glucose concentration (mg/dL)"
+    )
     blood_pressure: int = Field(
-        ..., ge=0, le=300, description="Diastolic blood pressure (mm Hg)"
+        ..., ge=0, le=300, description="Diastolic blood pressure (mmHg)"
     )
     skin_thickness: int = Field(
         ..., ge=0, le=100, description="Triceps skin fold thickness (mm)"
@@ -24,10 +25,7 @@ class DiabetesBase(BaseModel):
 
 
 class DiabetesCreate(DiabetesBase):
-    # Schema for incoming data from the doctor (POST)
-    outcome: Optional[int] = Field(
-        None, ge=0, le=1, description="Result: (0: No, 1: Yes)"
-    )
+    pass
 
 
 class DiabetesRecord(DiabetesBase):

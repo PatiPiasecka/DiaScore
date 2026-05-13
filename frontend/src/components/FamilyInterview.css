@@ -1,0 +1,141 @@
+@reference "../index.css";
+
+.fi-title {
+  @apply text-white uppercase text-sm font-bold tracking-widest mb-4;
+}
+
+.fi-container {
+  @apply bg-brand-brown/60 backdrop-blur-md border border-brand-pink/30 rounded-[30px] p-8 shadow-inner min-h-[400px] flex flex-col transition-all duration-300;
+}
+
+.fi-initial-view {
+  @apply flex flex-col items-center justify-center h-full flex-1 space-y-8 text-center py-12 transition-opacity duration-500;
+}
+
+.fi-icon-wrapper {
+  @apply bg-brand-red/40 p-4 rounded-full mb-2 shadow-[0_0_15px_rgba(162,87,79,0.5)];
+}
+
+.fi-heading {
+  @apply text-2xl font-bold text-white tracking-wide;
+}
+
+.fi-description {
+  @apply text-white/80 text-lg max-w-sm leading-relaxed;
+}
+
+.fi-button-group {
+  @apply flex flex-col sm:flex-row gap-4 w-full justify-center mt-4;
+}
+
+.fi-btn-yes {
+  @apply px-8 py-3 bg-gradient-to-r from-brand-orange to-brand-red text-white rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(230,128,87,0.5)] hover:-translate-y-1 transition-all duration-300;
+}
+
+.fi-btn-no {
+  @apply px-8 py-3 bg-white/10 border border-white/20 text-white rounded-2xl font-medium hover:bg-white/20 hover:-translate-y-1 transition-all duration-300;
+}
+
+.fi-add-view {
+  @apply flex flex-col h-full transition-opacity duration-500;
+}
+
+.fi-header {
+  @apply flex justify-between items-center border-b border-brand-pink/20 pb-5 mb-6;
+}
+
+.fi-counter {
+  @apply bg-brand-orange text-brand-brown w-8 h-8 rounded-full flex items-center justify-center font-black text-sm;
+}
+
+.fi-back-btn {
+  @apply text-sm text-brand-pink hover:text-brand-orange hover:underline transition-colors flex items-center gap-1;
+}
+
+.fi-label {
+  @apply text-sm font-bold text-white/80 uppercase tracking-widest flex items-center gap-2;
+}
+
+.fi-pill-btn {
+  @apply py-3 px-4 rounded-xl text-sm font-medium capitalize transition-all duration-300 border;
+}
+
+.fi-pill-btn-active {
+  @apply bg-brand-pink/90 border-brand-pink text-white shadow-lg shadow-brand-pink/20 scale-[1.02];
+}
+
+.fi-pill-btn-inactive {
+  @apply bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:border-white/30;
+}
+
+.fi-radio-box {
+  @apply flex-1 flex items-center justify-center gap-3 p-3 rounded-xl border cursor-pointer transition-all duration-300;
+}
+
+.fi-radio-box-active {
+  @apply bg-brand-orange/20 border-brand-orange text-white;
+}
+
+.fi-radio-box-inactive {
+  @apply bg-white/5 border-white/10 text-white/70 hover:bg-white/10;
+}
+
+.fi-radio-circle {
+  @apply w-4 h-4 rounded-full border-2 flex items-center justify-center;
+}
+
+.fi-radio-dot {
+  @apply w-2 h-2 bg-brand-orange rounded-full;
+}
+
+.fi-chip-btn {
+  @apply px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border;
+}
+
+.fi-chip-btn-active {
+  @apply bg-brand-orange text-white border-brand-orange shadow-[0_0_10px_rgba(230,128,87,0.4)];
+}
+
+.fi-chip-btn-inactive {
+  @apply bg-white/5 border-white/20 text-white/70 hover:bg-white/10 hover:text-white;
+}
+
+.fi-save-btn {
+  @apply w-full py-4 bg-brand-pink/10 border-2 border-brand-pink border-dashed text-brand-pink rounded-2xl font-bold hover:bg-brand-pink hover:text-white hover:border-solid hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2;
+}
+
+.fi-list-container {
+  @apply mt-8 pt-6 border-t border-brand-pink/20;
+}
+
+.fi-list-title {
+  @apply text-sm font-bold text-white/80 uppercase tracking-widest mb-4;
+}
+
+.fi-list {
+  @apply space-y-3 max-h-[200px] overflow-y-auto pr-2;
+}
+
+.fi-list-item {
+  @apply flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/10 hover:border-brand-orange/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-orange/10 w-full;
+}
+
+.fi-list-icon {
+  @apply bg-brand-brown w-10 h-10 rounded-full flex items-center justify-center border border-white/10;
+}
+
+.fi-delete-btn {
+  @apply text-brand-orange/70 hover:text-brand-orange hover:bg-brand-orange/10 p-2 rounded-full transition-all;
+}
+
+.fi-no-history-view {
+  @apply flex flex-col items-center justify-center h-full flex-1 text-center p-8 space-y-6 transition-opacity duration-500;
+}
+
+.fi-no-history-icon {
+  @apply bg-white/5 p-6 rounded-full border border-white/10 shadow-inner;
+}
+
+.fi-change-btn {
+  @apply px-6 py-2 rounded-full border border-brand-orange/50 text-brand-orange font-medium hover:bg-brand-orange hover:text-white transition-all duration-300 mt-4 hover:shadow-[0_0_15px_rgba(230,128,87,0.3)];
+}

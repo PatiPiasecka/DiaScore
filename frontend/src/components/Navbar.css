@@ -1,0 +1,42 @@
+.nav-tab {
+  color: rgba(255, 255, 255, 0.5);
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.nav-tab:hover {
+  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.nav-tab:active {
+  transform: translateY(1px) scale(0.95);
+  opacity: 0.7;
+}
+
+.nav-tab.active-tab {
+  color: white;
+  font-weight: 800;
+}
+
+.nav-tab.active-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 3px;
+  background-color: var(--brand-orange);
+  border-radius: 10px;
+  animation: growLine 0.3s ease-out;
+}
+
+@keyframes growLine {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
