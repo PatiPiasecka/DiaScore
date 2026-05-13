@@ -1,0 +1,25 @@
+@reference "../index.css";
+
+.medical-form-wrapper {
+  @apply space-y-5;
+}
+
+.medical-form-title {
+  @apply text-white uppercase text-sm font-bold tracking-widest mb-4;
+}
+
+.medical-form-field {
+  @apply flex flex-col mb-4;
+}
+
+.medical-form-label {
+  @apply text-xs font-bold text-white/90 tracking-widest uppercase mb-2 ml-1;
+}
+
+.input-error {
+  box-shadow: 0 0 50px var(--brand-pink);
+}
+
+.medical-form-error {
+  @apply text-purple-300 text-[14px] mt-1.5 ml-2 font-bold uppercase tracking-tight;
+}
