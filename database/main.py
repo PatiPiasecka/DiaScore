@@ -1,6 +1,8 @@
 from pathlib import Path
 import pandas as pd
-from database import SessionLocal, engine
+
+from .database import SessionLocal, engine
+from .preprocessing import fill_missing_values
 import models
 
 models.Base.metadata.create_all(bind=engine)
@@ -8,6 +10,7 @@ models.Base.metadata.create_all(bind=engine)
 
 def import_csv_to_db(csv_file_path: str):
     df = pd.read_csv(csv_file_path)
+    df = fill_missing_values(df)
 
     db = SessionLocal()
 
