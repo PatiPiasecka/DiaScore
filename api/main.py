@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):
     base = Path(__file__).resolve().parent.parent / "database"
     imputer_path = base / "imputer.joblib"
     try:
