@@ -1,4 +1,5 @@
 import logging
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -14,13 +15,25 @@ import joblib
 
 models.Base.metadata.create_all(bind=engine)
 
+logger = logging.getLogger(__name__)
+
+@asynccontextmanager
+def lifespan(app: FastAPI):
+    base = Path(__file__).resolve().parent.parent / "database"
+    imputer_path = base / "imputer.joblib"
+    try:
+        app.state.imputer = joblib.load(imputer_path)
+    except Exception as exc:
+        logger.warning("Failed to load imputer from %s: %s", imputer_path, exc)
+        app.state.imputer = None
+    yield
+
 app = FastAPI(
     title="DiaScore API",
     description="API for diabates risk prediction",
     version="1.0.0",
+    lifespan=lifespan,
 )
-
-logger = logging.getLogger(__name__)
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,17 +42,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-def load_imputer():
-    base = Path(__file__).resolve().parent.parent / "database"
-    imputer_path = base / "imputer.joblib"
-    try:
-        app.state.imputer = joblib.load(imputer_path)
-    except Exception as exc:
-        logger.warning("Failed to load imputer from %s: %s", imputer_path, exc)
-        app.state.imputer = None
 
 
 # Dependencies
