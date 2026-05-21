@@ -1,3 +1,6 @@
+import logging
+from pathlib import Path
+
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -8,7 +11,6 @@ from database import models, crud
 from database.database import SessionLocal, engine
 from database import preprocessing
 import joblib
-from pathlib import Path
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -17,6 +19,8 @@ app = FastAPI(
     description="API for diabates risk prediction",
     version="1.0.0",
 )
+
+logger = logging.getLogger(__name__)
 
 app.add_middleware(
     CORSMiddleware,
@@ -33,7 +37,8 @@ def load_imputer():
     imputer_path = base / "imputer.joblib"
     try:
         app.state.imputer = joblib.load(imputer_path)
-    except Exception:
+    except Exception as exc:
+        logger.warning("Failed to load imputer from %s: %s", imputer_path, exc)
         app.state.imputer = None
 
 
@@ -83,9 +88,14 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     """
     # Apply imputation for missing markers (0 values) if imputer is available
     imputer = getattr(app.state, "imputer", None)
+    if imputer is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction temporarily unavailable because the imputer is not loaded.",
+        )
+
     data_dict = data.model_dump()
-    if imputer is not None:
-        data_dict = preprocessing.impute_record(data_dict, imputer)
+    data_dict = preprocessing.impute_record(data_dict, imputer)
 
     # ML MODEL LOGIC (Placeholder)
     mock_risk = 1 if data_dict.get("glucose", data.glucose) > 140 else 0
