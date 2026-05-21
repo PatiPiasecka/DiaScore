@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.impute import KNNImputer
 import joblib
 
-from database.preprocessing import IMPUTE_FEATURE_COLUMNS, MISSING_VALUE_COLUMNS
+from preprocessing import IMPUTE_FEATURE_COLUMNS, MISSING_VALUE_COLUMNS
 
 
 def train_and_save_imputer(csv_path: str, output_path: str):
