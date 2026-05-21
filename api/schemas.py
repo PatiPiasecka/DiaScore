@@ -1,4 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
+from datetime import datetime
 
 
 class DiabetesBase(BaseModel):
@@ -29,7 +30,7 @@ class DiabetesCreate(DiabetesBase):
 
 
 class DiabetesRecord(DiabetesBase):
-    # Schema for reading data from the database (GET)
+    # Schema for reading training data from the database (GET /records/)
     id: int = Field(...)
     outcome: int = Field(...)
 
@@ -38,10 +39,35 @@ class DiabetesRecord(DiabetesBase):
     )
 
 
-class DiabetesPrediction(BaseModel):
-    # Response from our AI Model
+class PredictionResponse(BaseModel):
+    # Response from /predict/ endpoint - includes imputed patient data
     id: int
-    risk_score: float = Field(..., description="Probability of diabetes")
+    pregnancies: int
+    glucose: int
+    blood_pressure: int
+    skin_thickness: int
+    insulin: int
+    bmi: float
+    diabetes_pedigree_function: float
+    age: int
+    risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
     is_diabetic_risk: bool = Field(...)
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class PredictionHistory(BaseModel):
+    # Full prediction record for history endpoint
+    id: int
+    created_at: datetime
+    pregnancies: int
+    glucose: int
+    blood_pressure: int
+    skin_thickness: int
+    insulin: int
+    bmi: float
+    diabetes_pedigree_function: float
+    age: int
+    risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
 
     model_config = ConfigDict(from_attributes=True)

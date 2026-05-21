@@ -44,7 +44,7 @@ def test_create_and_then_read_record(client):
     created_record = post_response.json()
     record_id = created_record["id"]
 
-    get_response = client.get(f"/records/{record_id}")
+    get_response = client.get(f"/predictions/{record_id}")
 
     assert get_response.status_code == 200
     fetched_data = get_response.json()
@@ -54,11 +54,11 @@ def test_create_and_then_read_record(client):
     for key, value in new_data.items():
         assert fetched_data[key] == value
 
-    assert "outcome" in fetched_data
+    assert "risk_score" in fetched_data
 
 
 def test_database_updates_immediately(client):
-    initial_response = client.get("/records/")
+    initial_response = client.get("/predictions/")
     initial_top_id = initial_response.json()[0]["id"] if initial_response.json() else 0
 
     new_data = {
@@ -76,7 +76,7 @@ def test_database_updates_immediately(client):
     created_id = post_response.json()["id"]
     assert post_response.status_code == 201
 
-    updated_response = client.get("/records/")
+    updated_response = client.get("/predictions/")
     new_top_id = updated_response.json()[0]["id"]
 
     assert new_top_id == created_id
@@ -101,7 +101,7 @@ def test_new_record_is_at_the_top_of_history(client):
     assert post_response.status_code == 201
     created_id = post_response.json()["id"]
 
-    history_response = client.get("/records/")
+    history_response = client.get("/predictions/")
     records = history_response.json()
 
     first_record = records[0]
