@@ -6,6 +6,9 @@ from typing import List
 from . import schemas
 from database import models, crud
 from database.database import SessionLocal, engine
+from database import preprocessing
+import joblib
+from pathlib import Path
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,6 +25,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def load_imputer():
+    base = Path(__file__).resolve().parent.parent / "database"
+    imputer_path = base / "imputer.joblib"
+    try:
+        app.state.imputer = joblib.load(imputer_path)
+    except Exception:
+        app.state.imputer = None
 
 
 # Dependencies
@@ -68,9 +81,18 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     3. Save the record to the database for future analysis
     4. Returns the risk score and classification
     """
+    # Apply imputation for missing markers (0 values) if imputer is available
+    imputer = getattr(app.state, "imputer", None)
+    data_dict = data.model_dump()
+    if imputer is not None:
+        data_dict = preprocessing.impute_record(data_dict, imputer)
+
     # ML MODEL LOGIC (Placeholder)
-    mock_risk = 1 if data.glucose > 140 else 0
-    db_record = crud.create_diabetes_record(db=db, record=data, outcome=mock_risk)
+    mock_risk = 1 if data_dict.get("glucose", data.glucose) > 140 else 0
+
+    # create Pydantic model from possibly-updated dict
+    updated_data = schemas.DiabetesCreate(**data_dict)
+    db_record = crud.create_diabetes_record(db=db, record=updated_data, outcome=mock_risk)
 
     return schemas.DiabetesPrediction(
         id=db_record.id, risk_score=mock_risk, is_diabetic_risk=mock_risk > 0.5
