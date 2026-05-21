@@ -35,7 +35,9 @@ def fill_missing_values(df: pd.DataFrame) -> pd.DataFrame:
         if column in cleaned_df.columns:
             cleaned_df[column] = cleaned_df[column].replace(0, np.nan)
 
-    feature_columns = [col for col in IMPUTE_FEATURE_COLUMNS if col in cleaned_df.columns]
+    feature_columns = [
+        col for col in IMPUTE_FEATURE_COLUMNS if col in cleaned_df.columns
+    ]
     if feature_columns:
         cleaned_df[feature_columns] = cleaned_df[feature_columns].astype(float)
         imputer = KNNImputer(n_neighbors=5, weights="uniform")

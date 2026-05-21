@@ -92,7 +92,9 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
 
     # create Pydantic model from possibly-updated dict
     updated_data = schemas.DiabetesCreate(**data_dict)
-    db_record = crud.create_diabetes_record(db=db, record=updated_data, outcome=mock_risk)
+    db_record = crud.create_diabetes_record(
+        db=db, record=updated_data, outcome=mock_risk
+    )
 
     return schemas.DiabetesPrediction(
         id=db_record.id, risk_score=mock_risk, is_diabetic_risk=mock_risk > 0.5

@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.impute import KNNImputer
 import joblib
 
-from .preprocessing import IMPUTE_FEATURE_COLUMNS, MISSING_VALUE_COLUMNS
+from database.preprocessing import IMPUTE_FEATURE_COLUMNS, MISSING_VALUE_COLUMNS
 
 
 def train_and_save_imputer(csv_path: str, output_path: str):
@@ -25,8 +25,8 @@ def train_and_save_imputer(csv_path: str, output_path: str):
     print(f"Saved imputer to {output_path}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     BASE_DIR = Path(__file__).resolve().parent
-    csv_path = BASE_DIR.parent / 'data' / 'diabetes.csv'
-    out = BASE_DIR / 'imputer.joblib'
+    csv_path = BASE_DIR.parent / "data" / "diabetes.csv"
+    out = BASE_DIR / "imputer.joblib"
     train_and_save_imputer(csv_path, out)
