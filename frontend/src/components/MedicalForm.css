@@ -8,6 +8,14 @@
   @apply text-white uppercase text-sm font-bold tracking-widest mb-4;
 }
 
+.medical-form-hints {
+  @apply flex flex-col gap-3 mb-6 px-1;
+}
+
+.medical-form-hint {
+  @apply text-white/60 text-sm leading-relaxed m-0;
+}
+
 .medical-form-field {
   @apply flex flex-col mb-4;
 }

@@ -10,14 +10,11 @@ const PredictionResult = ({ prediction }) => {
   return (
     <div className="prediction-wrapper">
       <div className="prediction-inner">
-
-        {/* LEFT SIDE: GAUGE */}
         <div className="prediction-gauge-col">
           <h2 className="prediction-title">Prediction Result</h2>
           <Gauge percentage={scorePct} />
         </div>
 
-        {/* RIGHT SIDE: RECOMMENDATIONS */}
         <div className="prediction-rec-col">
           <div>
             <h3 className="prediction-rec-subtitle">Next Steps</h3>
@@ -32,8 +29,13 @@ const PredictionResult = ({ prediction }) => {
                     <span className="text-brand-pink font-bold">1</span>
                   </div>
                   <div>
-                    <p className="text-white font-bold mb-1">Consult a Healthcare Provider</p>
-                    <p className="text-white/60 text-sm">Please schedule an appointment with your doctor to discuss these results and get a professional diagnosis.</p>
+                    <p className="text-white font-bold mb-1">
+                      Consult a Healthcare Provider
+                    </p>
+                    <p className="text-white/60 text-sm">
+                      Please schedule an appointment with your doctor to discuss
+                      these results and get a professional diagnosis.
+                    </p>
                   </div>
                 </div>
                 <div className="prediction-rec-card border-brand-pink/20">
@@ -41,8 +43,13 @@ const PredictionResult = ({ prediction }) => {
                     <span className="text-brand-pink font-bold">2</span>
                   </div>
                   <div>
-                    <p className="text-white font-bold mb-1">Schedule Blood Tests</p>
-                    <p className="text-white/60 text-sm">Comprehensive metabolic panel and HbA1c tests are highly recommended to verify your glucose levels.</p>
+                    <p className="text-white font-bold mb-1">
+                      Schedule Blood Tests
+                    </p>
+                    <p className="text-white/60 text-sm">
+                      Comprehensive metabolic panel and HbA1c tests are highly
+                      recommended to verify your glucose levels.
+                    </p>
                   </div>
                 </div>
               </>
@@ -54,7 +61,10 @@ const PredictionResult = ({ prediction }) => {
                   </div>
                   <div>
                     <p className="text-white font-bold mb-1">Monitor Your Diet</p>
-                    <p className="text-white/60 text-sm">Focus on a balanced diet with lower sugar and carbohydrate intake. Consider tracking your meals.</p>
+                    <p className="text-white/60 text-sm">
+                      Focus on a balanced diet with lower sugar and carbohydrate
+                      intake. Consider tracking your meals.
+                    </p>
                   </div>
                 </div>
                 <div className="prediction-rec-card border-yellow-400/20">
@@ -62,8 +72,13 @@ const PredictionResult = ({ prediction }) => {
                     <span className="text-yellow-400 font-bold">2</span>
                   </div>
                   <div>
-                    <p className="text-white font-bold mb-1">Increase Physical Activity</p>
-                    <p className="text-white/60 text-sm">Aim for at least 150 minutes of moderate aerobic activity every week to improve insulin sensitivity.</p>
+                    <p className="text-white font-bold mb-1">
+                      Increase Physical Activity
+                    </p>
+                    <p className="text-white/60 text-sm">
+                      Aim for at least 150 minutes of moderate aerobic activity
+                      every week to improve insulin sensitivity.
+                    </p>
                   </div>
                 </div>
               </>
@@ -74,8 +89,13 @@ const PredictionResult = ({ prediction }) => {
                     <span className="text-green-400 font-bold">✓</span>
                   </div>
                   <div>
-                    <p className="text-white font-bold mb-1">Maintain Healthy Lifestyle</p>
-                    <p className="text-white/60 text-sm">Your risk is low. Continue your current habits regarding diet and exercise to stay healthy.</p>
+                    <p className="text-white font-bold mb-1">
+                      Maintain Healthy Lifestyle
+                    </p>
+                    <p className="text-white/60 text-sm">
+                      Your risk is low. Continue your current habits regarding
+                      diet and exercise to stay healthy.
+                    </p>
                   </div>
                 </div>
                 <div className="prediction-rec-card border-green-400/20">
@@ -84,19 +104,25 @@ const PredictionResult = ({ prediction }) => {
                   </div>
                   <div>
                     <p className="text-white font-bold mb-1">Routine Check-ups</p>
-                    <p className="text-white/60 text-sm">Keep up with your standard annual medical exams to monitor your baseline health metrics.</p>
+                    <p className="text-white/60 text-sm">
+                      Keep up with your standard annual medical exams to monitor
+                      your baseline health metrics.
+                    </p>
                   </div>
                 </div>
               </>
             )}
           </div>
         </div>
-
       </div>
 
-      {/* MEDICAL DISCLAIMER */}
       <p className="prediction-disclaimer">
-        <strong>Disclaimer:</strong> The DiaScore prediction is generated by a machine learning algorithm for informational purposes only and does not constitute a professional medical diagnosis. We assume no liability or responsibility for any decisions made based on these results. Always consult with a qualified healthcare provider regarding your health and medical conditions.
+        <strong>Disclaimer:</strong> The DiaScore prediction is generated by a
+        machine learning algorithm for informational purposes only and does not
+        constitute a professional medical diagnosis. We assume no liability or
+        responsibility for any decisions made based on these results. Always
+        consult with a qualified healthcare provider regarding your health and
+        medical conditions.
       </p>
     </div>
   );
