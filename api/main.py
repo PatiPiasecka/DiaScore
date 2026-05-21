@@ -17,6 +17,7 @@ models.Base.metadata.create_all(bind=engine)
 
 logger = logging.getLogger(__name__)
 
+
 @asynccontextmanager
 def lifespan(app: FastAPI):
     base = Path(__file__).resolve().parent.parent / "database"
@@ -27,6 +28,7 @@ def lifespan(app: FastAPI):
         logger.warning("Failed to load imputer from %s: %s", imputer_path, exc)
         app.state.imputer = None
     yield
+
 
 app = FastAPI(
     title="DiaScore API",
@@ -78,14 +80,14 @@ def read_record(record_id: int, db: Session = Depends(get_db)):
 @app.post(
     "/predict/",
     status_code=status.HTTP_201_CREATED,
-    response_model=schemas.DiabetesPrediction,
+    response_model=schemas.PredictionResponse,
     tags=["AI, Prediction"],
 )
 def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db)):
     """
     1. Receive Patient Data
     2. Runs the ML prediction (in future)
-    3. Save the record to the database for future analysis
+    3. Save the prediction to the database
     4. Returns the risk score and classification
     """
     # Apply imputation for missing markers (0 values) if imputer is available
@@ -99,15 +101,51 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     data_dict = data.model_dump()
     data_dict = preprocessing.impute_record(data_dict, imputer)
 
-    # ML MODEL LOGIC (Placeholder)
-    mock_risk = 1 if data_dict.get("glucose", data.glucose) > 140 else 0
+    # ML MODEL LOGIC (Placeholder) - returns risk score as float 0.0-1.0
+    glucose = data_dict.get("glucose", data.glucose)
+    risk_score = 0.8 if glucose > 140 else 0.3
 
-    # create Pydantic model from possibly-updated dict
-    updated_data = schemas.DiabetesCreate(**data_dict)
-    db_record = crud.create_diabetes_record(
-        db=db, record=updated_data, outcome=mock_risk
+    # Create prediction record with float risk_score
+    from database import schemas as db_schemas
+
+    prediction_data = db_schemas.PatientPredictionCreate(
+        pregnancies=data_dict["pregnancies"],
+        glucose=data_dict["glucose"],
+        blood_pressure=data_dict["blood_pressure"],
+        skin_thickness=data_dict["skin_thickness"],
+        insulin=data_dict["insulin"],
+        bmi=data_dict["bmi"],
+        diabetes_pedigree_function=data_dict["diabetes_pedigree_function"],
+        age=data_dict["age"],
+        risk_score=risk_score,
+    )
+    db_prediction = crud.create_prediction(db=db, prediction=prediction_data)
+
+    return schemas.PredictionResponse(
+        id=db_prediction.id, risk_score=risk_score, is_diabetic_risk=risk_score > 0.5
     )
 
-    return schemas.DiabetesPrediction(
-        id=db_record.id, risk_score=mock_risk, is_diabetic_risk=mock_risk > 0.5
-    )
+
+@app.get(
+    "/predictions/",
+    response_model=List[schemas.PredictionHistory],
+    tags=["Data Management"],
+)
+def read_predictions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """Retrieve prediction history (user predictions, not training data)."""
+    predictions = crud.get_predictions(db, skip=skip, limit=limit)
+    return predictions
+
+
+@app.get(
+    "/predictions/{prediction_id}",
+    response_model=schemas.PredictionHistory,
+    tags=["Data Management"],
+)
+def read_prediction(prediction_id: int, db: Session = Depends(get_db)):
+    """Get a specific prediction by ID."""
+    prediction = crud.get_prediction(db, prediction_id=prediction_id)
+
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction record not found")
+    return prediction
