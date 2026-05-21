@@ -56,7 +56,9 @@ def fill_missing_values(df: pd.DataFrame, imputer=None) -> pd.DataFrame:
         cleaned_df[feature_columns] = cleaned_df[feature_columns].astype(float)
         if imputer is None:
             imputer = create_imputer()
-            cleaned_df[feature_columns] = imputer.fit_transform(cleaned_df[feature_columns])
+            cleaned_df[feature_columns] = imputer.fit_transform(
+                cleaned_df[feature_columns]
+            )
         else:
             cleaned_df[feature_columns] = imputer.transform(cleaned_df[feature_columns])
 

@@ -26,6 +26,6 @@ def train_and_save_imputer(csv_path: str, output_path: str):
 
 if __name__ == "__main__":
     BASE_DIR = Path(__file__).resolve().parent
-    csv_path = BASE_DIR.parent / 'data' / 'diabetes.csv'
-    out = BASE_DIR / 'imputer.joblib'
+    csv_path = BASE_DIR.parent / "data" / "diabetes.csv"
+    out = BASE_DIR / "imputer.joblib"
     train_and_save_imputer(csv_path, out)
