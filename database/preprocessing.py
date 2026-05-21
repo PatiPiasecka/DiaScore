@@ -1,3 +1,6 @@
+from pathlib import Path
+
+import joblib
 import numpy as np
 import pandas as pd
 from sklearn.impute import KNNImputer
@@ -22,12 +25,23 @@ IMPUTE_FEATURE_COLUMNS = [
 ]
 
 
-def fill_missing_values(df: pd.DataFrame) -> pd.DataFrame:
+def create_imputer() -> KNNImputer:
+    return KNNImputer(n_neighbors=5, weights="uniform")
+
+
+def load_imputer(imputer_path: str | Path):
+    return joblib.load(Path(imputer_path))
+
+
+def fill_missing_values(df: pd.DataFrame, imputer=None) -> pd.DataFrame:
     """Fill missing values in the diabetes dataset using KNN imputation.
 
     In this dataset, zeros in the selected columns represent missing
     measurements rather than actual values. We replace those zeros with
     NaN and let KNNImputer estimate them from similar patient records.
+
+    If a fitted imputer is provided, it will be used to transform the data.
+    Otherwise a new imputer is fitted on the provided dataset.
     """
     cleaned_df = df.copy()
 
@@ -40,8 +54,11 @@ def fill_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     ]
     if feature_columns:
         cleaned_df[feature_columns] = cleaned_df[feature_columns].astype(float)
-        imputer = KNNImputer(n_neighbors=5, weights="uniform")
-        cleaned_df[feature_columns] = imputer.fit_transform(cleaned_df[feature_columns])
+        if imputer is None:
+            imputer = create_imputer()
+            cleaned_df[feature_columns] = imputer.fit_transform(cleaned_df[feature_columns])
+        else:
+            cleaned_df[feature_columns] = imputer.transform(cleaned_df[feature_columns])
 
     return cleaned_df
 

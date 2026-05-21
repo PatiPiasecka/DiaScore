@@ -1,4 +1,5 @@
 from pathlib import Path
+import joblib
 import pandas as pd
 
 from .database import SessionLocal, engine
@@ -10,7 +11,14 @@ models.Base.metadata.create_all(bind=engine)
 
 def import_csv_to_db(csv_file_path: str):
     df = pd.read_csv(csv_file_path)
-    df = fill_missing_values(df)
+
+    base_dir = Path(__file__).resolve().parent
+    imputer_path = base_dir / "imputer.joblib"
+    imputer = None
+    if imputer_path.exists():
+        imputer = joblib.load(imputer_path)
+
+    df = fill_missing_values(df, imputer)
 
     db = SessionLocal()
 
