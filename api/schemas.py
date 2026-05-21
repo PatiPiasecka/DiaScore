@@ -40,8 +40,16 @@ class DiabetesRecord(DiabetesBase):
 
 
 class PredictionResponse(BaseModel):
-    # Response from /predict/ endpoint
+    # Response from /predict/ endpoint - includes imputed patient data
     id: int
+    pregnancies: int
+    glucose: int
+    blood_pressure: int
+    skin_thickness: int
+    insulin: int
+    bmi: float
+    diabetes_pedigree_function: float
+    age: int
     risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
     is_diabetic_risk: bool = Field(...)
 

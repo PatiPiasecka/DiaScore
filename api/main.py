@@ -122,7 +122,17 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     db_prediction = crud.create_prediction(db=db, prediction=prediction_data)
 
     return schemas.PredictionResponse(
-        id=db_prediction.id, risk_score=risk_score, is_diabetic_risk=risk_score > 0.5
+        id=db_prediction.id,
+        pregnancies=data_dict["pregnancies"],
+        glucose=data_dict["glucose"],
+        blood_pressure=data_dict["blood_pressure"],
+        skin_thickness=data_dict["skin_thickness"],
+        insulin=data_dict["insulin"],
+        bmi=data_dict["bmi"],
+        diabetes_pedigree_function=data_dict["diabetes_pedigree_function"],
+        age=data_dict["age"],
+        risk_score=risk_score,
+        is_diabetic_risk=risk_score > 0.5,
     )
 
 

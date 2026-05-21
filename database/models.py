@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, Float, DateTime
-from datetime import datetime
+from datetime import datetime, timezone
 from .database import Base
 
 
@@ -26,7 +26,7 @@ class PatientPrediction(Base):
     __tablename__ = "patient_predictions"
 
     id = Column(Integer, primary_key=True, index=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     pregnancies = Column(Integer)
     glucose = Column(Integer)
     blood_pressure = Column(Integer)
