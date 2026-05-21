@@ -58,19 +58,18 @@ const Gauge = ({ percentage }) => {
             <rect x="0" y="0" width="300" height="170" fill="url(#gaugeGradient)" />
           </g>
 
-          {/* Needle */}
+          {/* Modern Indicator on the arc */}
           <g transform={`rotate(${rotation}, 150, 150)`} className="transition-transform duration-[1500ms] ease-[cubic-bezier(0.22,1,0.36,1)]">
-            <line x1="150" y1="150" x2="260" y2="150" stroke="white" strokeWidth="4" strokeLinecap="round" />
-            {/* Needle center base */}
-            <circle cx="150" cy="150" r="8" fill="#2d1a18" stroke="white" strokeWidth="3" />
-            {/* Inner small dot */}
-            <circle cx="150" cy="150" r="2" fill="white" />
+            {/* Outer shadow/glow circle */}
+            <circle cx="270" cy="150" r="16" fill="white" className="drop-shadow-lg" />
+            {/* Inner dark dot matching background */}
+            <circle cx="270" cy="150" r="6" fill="#2d1a18" />
           </g>
 
         </svg>
 
         {/* Text inside arc */}
-        <div className="absolute top-[65px] left-0 w-full text-center flex flex-col items-center">
+        <div className="absolute top-[85px] left-0 w-full text-center flex flex-col items-center">
           <p className="text-[11px] text-white/60 tracking-[0.2em] uppercase font-bold mb-1">Overall Risk</p>
           <p className="text-4xl font-black text-white tracking-tighter drop-shadow-md">{animatedPct}%</p>
         </div>
