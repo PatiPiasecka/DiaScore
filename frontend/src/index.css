@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-brown: #2d1a18;
-  --color-brand-red: #a2574f;
-  --color-brand-orange: #e68057;
-  --color-brand-pink: #bf7587;
-  --color-brand-magenta: #993A8B;
+  --color-brand-plum: #241b35;
+  --color-brand-surface: #382a4f;
+  --color-brand-lilac: #c2a3ff;
+  --color-brand-mauve: #8d75b3;
+  --color-brand-purple: #5e4882;
 }
 
 @layer base {
@@ -14,23 +14,23 @@
   body {
     margin: 0;
     padding: 0;
-    background-color: var(--brand-brown);
+    background-color: var(--brand-plum);
   }
 }
 
 :root {
-  --brand-brown: #2d1a18;
-  --brand-red: #a2574f;
-  --brand-orange: #e68057;
-  --brand-pink: #bf7587;
-  --brand-dirtypink: #8d524c;
-  --brand-magenta: #993A8B;
+  --brand-plum: #241b35;
+  --brand-surface: #382a4f;
+  --brand-lilac: #c2a3ff;
+  --brand-mauve: #8d75b3;
+  --brand-input: #2e2342;
+  --brand-purple: #5e4882;
 }
 
 /* CSS */
 .button-1 {
   appearance: none;
-  background-color: var(--brand-orange);
+  background-color: var(--brand-lilac);
   border: none;
   border-radius: 1rem;
   box-sizing: border-box;
@@ -62,7 +62,7 @@
 }
 
 .button-1:hover {
-  box-shadow: 0 0 25px rgba(230, 128, 87, 0.6);
+  box-shadow: 0 0 25px rgba(194, 163, 255, 0.6);
   transform: translateY(-3px) scale(1.02);
 }
 
@@ -88,7 +88,7 @@
   border: 2px solid transparent;
   border-radius: 10px;
   outline: none;
-  background-color: var(--brand-brown);
+  background-color: var(--brand-plum);
   color: #ffffff;
   transition: .5s ease;
 }
@@ -110,9 +110,9 @@
 .input:focus,
 input:hover {
   outline: none;
-  border-color: var(--brand-brown);
-  background-color: var(--brand-dirtypink);
-  box-shadow: 0 0 0 5px var(--brand-pink);
+  border-color: var(--brand-plum);
+  background-color: var(--brand-input);
+  box-shadow: 0 0 0 5px var(--brand-mauve);
 }
 
 /* Custom Scrollbar */
@@ -126,10 +126,10 @@ input:hover {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: var(--brand-pink);
+  background: var(--brand-mauve);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: var(--brand-orange);
+  background: var(--brand-lilac);
 }

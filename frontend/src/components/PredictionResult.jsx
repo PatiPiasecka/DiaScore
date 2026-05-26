@@ -24,9 +24,9 @@ const PredictionResult = ({ prediction }) => {
           <div className="space-y-4">
             {scorePct > 66 ? (
               <>
-                <div className="prediction-rec-card border-brand-pink/20">
-                  <div className="prediction-rec-icon bg-brand-pink/20">
-                    <span className="text-brand-pink font-bold">1</span>
+                <div className="prediction-rec-card border-brand-mauve/20">
+                  <div className="prediction-rec-icon bg-brand-mauve/20">
+                    <span className="text-brand-mauve font-bold">1</span>
                   </div>
                   <div>
                     <p className="text-white font-bold mb-1">
@@ -38,9 +38,9 @@ const PredictionResult = ({ prediction }) => {
                     </p>
                   </div>
                 </div>
-                <div className="prediction-rec-card border-brand-pink/20">
-                  <div className="prediction-rec-icon bg-brand-pink/20">
-                    <span className="text-brand-pink font-bold">2</span>
+                <div className="prediction-rec-card border-brand-mauve/20">
+                  <div className="prediction-rec-icon bg-brand-mauve/20">
+                    <span className="text-brand-mauve font-bold">2</span>
                   </div>
                   <div>
                     <p className="text-white font-bold mb-1">

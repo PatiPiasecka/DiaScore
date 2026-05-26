@@ -5,7 +5,7 @@
 }
 
 .fi-container {
-  @apply bg-brand-brown/60 backdrop-blur-md border border-brand-pink/30 rounded-[30px] p-8 shadow-inner min-h-[400px] flex flex-col transition-all duration-300;
+  @apply bg-brand-plum/60 backdrop-blur-md border border-brand-mauve/30 rounded-[30px] p-8 shadow-inner min-h-[400px] flex flex-col transition-all duration-300;
 }
 
 .fi-initial-view {
@@ -13,7 +13,7 @@
 }
 
 .fi-icon-wrapper {
-  @apply bg-brand-red/40 p-4 rounded-full mb-2 shadow-[0_0_15px_rgba(162,87,79,0.5)];
+  @apply bg-brand-surface/40 p-4 rounded-full mb-2 shadow-[0_0_15px_rgba(56,42,79,0.5)];
 }
 
 .fi-heading {
@@ -29,7 +29,7 @@
 }
 
 .fi-btn-yes {
-  @apply px-8 py-3 bg-gradient-to-r from-brand-orange to-brand-red text-white rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(230,128,87,0.5)] hover:-translate-y-1 transition-all duration-300;
+  @apply px-8 py-3 bg-gradient-to-r from-brand-lilac to-brand-surface text-white rounded-2xl font-bold hover:shadow-[0_0_20px_rgba(194,163,255,0.5)] hover:-translate-y-1 transition-all duration-300;
 }
 
 .fi-btn-no {
@@ -41,15 +41,15 @@
 }
 
 .fi-header {
-  @apply flex justify-between items-center border-b border-brand-pink/20 pb-5 mb-6;
+  @apply flex justify-between items-center border-b border-brand-mauve/20 pb-5 mb-6;
 }
 
 .fi-counter {
-  @apply bg-brand-orange text-brand-brown w-8 h-8 rounded-full flex items-center justify-center font-black text-sm;
+  @apply bg-brand-lilac text-brand-plum w-8 h-8 rounded-full flex items-center justify-center font-black text-sm;
 }
 
 .fi-back-btn {
-  @apply text-sm text-brand-pink hover:text-brand-orange hover:underline transition-colors flex items-center gap-1;
+  @apply text-sm text-brand-mauve hover:text-brand-lilac hover:underline transition-colors flex items-center gap-1;
 }
 
 .fi-label {
@@ -61,7 +61,7 @@
 }
 
 .fi-pill-btn-active {
-  @apply bg-brand-pink/90 border-brand-pink text-white shadow-lg shadow-brand-pink/20 scale-[1.02];
+  @apply bg-brand-mauve/90 border-brand-mauve text-white shadow-lg shadow-brand-mauve/20 scale-[1.02];
 }
 
 .fi-pill-btn-inactive {
@@ -73,7 +73,7 @@
 }
 
 .fi-radio-box-active {
-  @apply bg-brand-orange/20 border-brand-orange text-white;
+  @apply bg-brand-lilac/20 border-brand-lilac text-white;
 }
 
 .fi-radio-box-inactive {
@@ -85,7 +85,7 @@
 }
 
 .fi-radio-dot {
-  @apply w-2 h-2 bg-brand-orange rounded-full;
+  @apply w-2 h-2 bg-brand-lilac rounded-full;
 }
 
 .fi-chip-btn {
@@ -93,7 +93,7 @@
 }
 
 .fi-chip-btn-active {
-  @apply bg-brand-orange text-white border-brand-orange shadow-[0_0_10px_rgba(230,128,87,0.4)];
+  @apply bg-brand-lilac text-white border-brand-lilac shadow-[0_0_10px_rgba(194,163,255,0.4)];
 }
 
 .fi-chip-btn-inactive {
@@ -101,11 +101,11 @@
 }
 
 .fi-save-btn {
-  @apply w-full py-4 bg-brand-pink/10 border-2 border-brand-pink border-dashed text-brand-pink rounded-2xl font-bold hover:bg-brand-pink hover:text-white hover:border-solid hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2;
+  @apply w-full py-4 bg-brand-mauve/10 border-2 border-brand-mauve border-dashed text-brand-mauve rounded-2xl font-bold hover:bg-brand-mauve hover:text-white hover:border-solid hover:-translate-y-1 transition-all duration-300 flex justify-center items-center gap-2;
 }
 
 .fi-list-container {
-  @apply mt-8 pt-6 border-t border-brand-pink/20;
+  @apply mt-8 pt-6 border-t border-brand-mauve/20;
 }
 
 .fi-list-title {
@@ -117,15 +117,15 @@
 }
 
 .fi-list-item {
-  @apply flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/10 hover:border-brand-orange/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-orange/10 w-full;
+  @apply flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/10 hover:border-brand-lilac/50 transition-all duration-300 hover:shadow-lg hover:shadow-brand-lilac/10 w-full;
 }
 
 .fi-list-icon {
-  @apply bg-brand-brown w-10 h-10 rounded-full flex items-center justify-center border border-white/10;
+  @apply bg-brand-plum w-10 h-10 rounded-full flex items-center justify-center border border-white/10;
 }
 
 .fi-delete-btn {
-  @apply text-brand-orange/70 hover:text-brand-orange hover:bg-brand-orange/10 p-2 rounded-full transition-all;
+  @apply text-brand-lilac/70 hover:text-brand-lilac hover:bg-brand-lilac/10 p-2 rounded-full transition-all;
 }
 
 .fi-no-history-view {
@@ -137,5 +137,5 @@
 }
 
 .fi-change-btn {
-  @apply px-6 py-2 rounded-full border border-brand-orange/50 text-brand-orange font-medium hover:bg-brand-orange hover:text-white transition-all duration-300 mt-4 hover:shadow-[0_0_15px_rgba(230,128,87,0.3)];
+  @apply px-6 py-2 rounded-full border border-brand-lilac/50 text-brand-lilac font-medium hover:bg-brand-lilac hover:text-white transition-all duration-300 mt-4 hover:shadow-[0_0_15px_rgba(194,163,255,0.3)];
 }

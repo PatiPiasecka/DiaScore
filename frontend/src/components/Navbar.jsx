@@ -3,12 +3,12 @@ import './Navbar.css';
 
 const Navbar = ({ activeTab, setActiveTab }) => {
   return (
-    <nav className="mx-6 lg:mx-12 bg-brand-red border-b border-brand-pink rounded-[40px] px-8 py-4 mb-8 mt-8">
+    <nav className="mx-6 lg:mx-12 bg-brand-surface border-b border-brand-mauve rounded-[40px] px-8 py-4 mb-8 mt-8">
       <div className="w-full flex justify-between items-center lg:items-start">
 
           {/*LOGO*/}
           <NavLink to="/" className="flex items-center gap-2 mt-2.5">
-            <div className="w-8 h-8 bg-brand-pink rounded-lg flex items-center justify-center font-bold">D</div>
+            <div className="w-8 h-8 bg-brand-mauve rounded-lg flex items-center justify-center font-bold">D</div>
             <span className="text-xl font-black text-white tracking-tighter">DiaScore</span>
           </NavLink>
 

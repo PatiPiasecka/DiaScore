@@ -57,7 +57,7 @@ const FamilyInterview = () => {
         {hasFamilyHistory === null && (
           <div className="fi-initial-view">
             <div className="fi-icon-wrapper">
-              <svg className="w-10 h-10 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              <svg className="w-10 h-10 text-brand-lilac" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </div>
             <h4 className="fi-heading">Family Medical History</h4>
             <p className="fi-description">Does anyone in your close family have or had diabetes?</p>
@@ -90,7 +90,7 @@ const FamilyInterview = () => {
               {/* Relationship */}
               <div className="space-y-4">
                 <label className="fi-label">
-                  <svg className="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                  <svg className="w-4 h-4 text-brand-lilac" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                   Relationship
                 </label>
                 <div className="grid grid-cols-2 gap-3">
@@ -110,20 +110,20 @@ const FamilyInterview = () => {
               {/* Diagnosis age */}
               <div className="space-y-4">
                 <label className="fi-label">
-                  <svg className="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                  <svg className="w-4 h-4 text-brand-lilac" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                   Diagnosis before age 50?
                 </label>
                 <div className="flex gap-4">
                   <label className={`fi-radio-box ${currentMember.earlyOnset ? 'fi-radio-box-active' : 'fi-radio-box-inactive'}`}>
                     <input type="radio" name="onset" checked={currentMember.earlyOnset} onChange={() => setCurrentMember({ ...currentMember, earlyOnset: true })} className="hidden" />
-                    <div className={`fi-radio-circle ${currentMember.earlyOnset ? 'border-brand-orange' : 'border-white/40'}`}>
+                    <div className={`fi-radio-circle ${currentMember.earlyOnset ? 'border-brand-lilac' : 'border-white/40'}`}>
                       {currentMember.earlyOnset && <div className="fi-radio-dot"></div>}
                     </div>
                     <span className="font-medium">Yes</span>
                   </label>
                   <label className={`fi-radio-box ${!currentMember.earlyOnset ? 'fi-radio-box-active' : 'fi-radio-box-inactive'}`}>
                     <input type="radio" name="onset" checked={!currentMember.earlyOnset} onChange={() => setCurrentMember({ ...currentMember, earlyOnset: false })} className="hidden" />
-                    <div className={`fi-radio-circle ${!currentMember.earlyOnset ? 'border-brand-orange' : 'border-white/40'}`}>
+                    <div className={`fi-radio-circle ${!currentMember.earlyOnset ? 'border-brand-lilac' : 'border-white/40'}`}>
                       {!currentMember.earlyOnset && <div className="fi-radio-dot"></div>}
                     </div>
                     <span className="font-medium">No</span>
@@ -134,7 +134,7 @@ const FamilyInterview = () => {
               {/* Other diseases */}
               <div className="space-y-4">
                 <label className="fi-label">
-                  <svg className="w-4 h-4 text-brand-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                  <svg className="w-4 h-4 text-brand-lilac" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                   Other conditions
                 </label>
                 <div className="flex flex-wrap gap-3">
@@ -172,7 +172,7 @@ const FamilyInterview = () => {
                     <div key={member.id} className="fi-list-item">
                       <div className="flex items-center gap-3">
                         <div className="fi-list-icon">
-                          <svg className="w-5 h-5 text-brand-pink" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                          <svg className="w-5 h-5 text-brand-mauve" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                         </div>
                         <div>
                           <span className="block font-bold capitalize text-white">{member.relationship}</span>
