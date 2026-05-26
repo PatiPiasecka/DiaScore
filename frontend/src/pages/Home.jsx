@@ -178,11 +178,11 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-brown text-white flex flex-col font-sans">
-      <main className="flex-1 flex flex-col items-center py-10 px-6 lg:px-0">
+    <div className="w-full text-white flex flex-col font-sans">
+      <main className="flex-1 flex flex-col items-center py-10 w-full px-6 lg:px-12">
         <div className="flex flex-col items-center mb-12">
           <h1 className="text-4xl lg:text-6xl font-black tracking-tight text-center drop-shadow-md">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-orange to-brand-pink">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lilac to-[#dca3d6]">
               DiaScore
             </span>
             <span className="text-white ml-3">Prediction</span>
@@ -192,18 +192,22 @@ function Home() {
           </p>
         </div>
 
-        <div className="w-full max-w-7xl bg-brand-red border border-brand-pink rounded-[40px] p-8 lg:p-12 shadow-2xl transition-all duration-1000 overflow-hidden mx-auto">
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <MedicalForm
-                formData={formData}
-                handleChange={handleChange}
-                errors={errors}
-              />
-              <FamilyInterview />
+        <div className="w-full max-w-[1500px] bg-brand-surface border border-brand-mauve rounded-[40px] p-8 lg:p-12 shadow-2xl transition-all duration-1000 overflow-hidden mx-auto">
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col items-center">
+            <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
+              <div className="lg:col-span-5">
+                <MedicalForm
+                  formData={formData}
+                  handleChange={handleChange}
+                  errors={errors}
+                />
+              </div>
+              <div className="lg:col-span-7">
+                <FamilyInterview />
+              </div>
             </div>
 
-            <div className="mt-12 flex justify-center border-t border-brand-pink/10 pt-8">
+            <div className="w-full max-w-7xl mt-12 flex justify-center border-t border-brand-mauve/10 pt-8">
               <button
                 type="submit"
                 disabled={loading}

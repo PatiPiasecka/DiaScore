@@ -10,9 +10,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-brand-brown">
+      <div className="min-h-screen bg-brand-plum">
         <Navbar activeTab={activeTab} setActiveTab={setActiveTab}/>
-        <main className="container mx-auto px-4 pb-12">
+        <main className="w-full pb-12">
 
           <Routes>
             <Route path="/" element={<Home />} />

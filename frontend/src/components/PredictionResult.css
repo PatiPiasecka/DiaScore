@@ -1,15 +1,15 @@
 @reference "../index.css";
 
 .prediction-wrapper {
-  @apply w-full mt-10 border-t border-brand-pink/20 pt-10 transition-all duration-1000;
+  @apply w-full mt-10 border-t border-brand-mauve/20 pt-10 transition-all duration-1000;
 }
 
 .prediction-inner {
-  @apply w-full bg-brand-brown rounded-[30px] p-8 lg:p-10 shadow-inner grid grid-cols-1 lg:grid-cols-2 gap-10 items-center;
+  @apply w-full bg-brand-plum rounded-[30px] p-8 lg:p-10 shadow-inner grid grid-cols-1 lg:grid-cols-2 gap-10 items-center;
 }
 
 .prediction-gauge-col {
-  @apply flex flex-col items-center border-b lg:border-b-0 lg:border-r border-brand-pink/10 pb-10 lg:pb-0 lg:pr-10;
+  @apply flex flex-col items-center border-b lg:border-b-0 lg:border-r border-brand-mauve/10 pb-10 lg:pb-0 lg:pr-10;
 }
 
 .prediction-title {
@@ -21,7 +21,7 @@
 }
 
 .prediction-rec-subtitle {
-  @apply text-sm font-bold text-brand-orange tracking-widest uppercase mb-2;
+  @apply text-sm font-bold text-brand-lilac tracking-widest uppercase mb-2;
 }
 
 .prediction-rec-title {

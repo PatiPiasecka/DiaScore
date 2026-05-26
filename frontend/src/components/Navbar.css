@@ -31,7 +31,7 @@
   left: 10px;
   right: 10px;
   height: 3px;
-  background-color: var(--brand-orange);
+  background-color: var(--brand-lilac);
   border-radius: 10px;
   animation: growLine 0.3s ease-out;
 }
