@@ -146,7 +146,7 @@ def impute_record(record: dict, imputer) -> dict:
     df = pd.DataFrame([row], columns=feature_cols)
     df = df.astype(float)
 
-    imputed = imputer.transform(df.values)
+    imputed = imputer.transform(df)
 
     # Update only the missing columns in the original record (convert back to snake_case)
     reverse_map = {v: k for k, v in case_map.items()}
