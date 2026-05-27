@@ -24,35 +24,38 @@ IMPUTE_FEATURE_COLUMNS = [
     "Age",
 ]
 
+
 def calculate_dpf(family_members: list, has_family_history: str) -> float:
     TARGET_MIN = 0.078
     TARGET_MAX = 2.420
     HEURISTIC_MIN = 0.400
     HEURISTIC_MAX = 7.600
-    
-    if has_family_history != 'yes' or not family_members:
+
+    if has_family_history != "yes" or not family_members:
         raw_dpf = HEURISTIC_MIN
     else:
         numerator_sum = 0
         for member in family_members:
-            rel = member.get('relationship', 'other')
-            early_onset = member.get('earlyOnset', False)
-            
-            if rel in ['parent', 'sibling']:
+            rel = member.get("relationship", "other")
+            early_onset = member.get("earlyOnset", False)
+
+            if rel in ["parent", "sibling"]:
                 k = 0.500
-            elif rel == 'grandparent':
+            elif rel == "grandparent":
                 k = 0.250
             else:
                 k = 0.125
-                
+
             adm = 40 if early_onset else 60
             numerator_sum += k * (88 - adm)
-            
+
         raw_dpf = (numerator_sum + 20) / 50
-        
+
     raw_dpf = min(raw_dpf, HEURISTIC_MAX)
-    normalized_dpf = ((raw_dpf - HEURISTIC_MIN) / (HEURISTIC_MAX - HEURISTIC_MIN)) * (TARGET_MAX - TARGET_MIN) + TARGET_MIN
-    
+    normalized_dpf = ((raw_dpf - HEURISTIC_MIN) / (HEURISTIC_MAX - HEURISTIC_MIN)) * (
+        TARGET_MAX - TARGET_MIN
+    ) + TARGET_MIN
+
     return round(normalized_dpf, 3)
 
 
@@ -105,12 +108,12 @@ def impute_record(record: dict, imputer) -> dict:
     Only columns listed in MISSING_VALUE_COLUMNS will be replaced when
     they were provided as 0 (treated as missing). Other fields are left as-is.
     """
-    
+
     # Calculate pedigree function
     has_history = record.get("has_family_history", "unknown")
     family_members = record.get("family_members", [])
     record["diabetes_pedigree_function"] = calculate_dpf(family_members, has_history)
-    
+
     if imputer is None:
         return record
 
