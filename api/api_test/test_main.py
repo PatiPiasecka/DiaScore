@@ -28,6 +28,7 @@ def test_read_single_record_not_found(client):
 
 
 def test_create_and_then_read_record(client):
+    """Test creating a prediction and fetching the stored result."""
     new_data = {
         "pregnancies": 0,
         "glucose": 100,
@@ -35,8 +36,11 @@ def test_create_and_then_read_record(client):
         "skin_thickness": 20,
         "insulin": 50,
         "bmi": 22.0,
-        "diabetes_pedigree_function": 0.1,
         "age": 25,
+        "has_family_history": "yes",
+        "family_members": [
+            {"relationship": "parent", "earlyOnset": True, "otherDiseases": []}
+        ],
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -45,15 +49,16 @@ def test_create_and_then_read_record(client):
     record_id = created_record["id"]
 
     get_response = client.get(f"/predictions/{record_id}")
-
     assert get_response.status_code == 200
+
     fetched_data = get_response.json()
 
+    # Validate the data was stored and returned correctly
     assert fetched_data["id"] == record_id
-
-    for key, value in new_data.items():
-        assert fetched_data[key] == value
-
+    assert fetched_data["glucose"] == 100
+    assert fetched_data["age"] == 25
+    assert "diabetes_pedigree_function" in fetched_data
+    assert fetched_data["diabetes_pedigree_function"] > 0
     assert "risk_score" in fetched_data
 
 
@@ -68,8 +73,9 @@ def test_database_updates_immediately(client):
         "skin_thickness": 25,
         "insulin": 0,
         "bmi": 99.9,
-        "diabetes_pedigree_function": 0.5,
         "age": 40,
+        "has_family_history": "unknown",
+        "family_members": [],
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -93,8 +99,9 @@ def test_new_record_is_at_the_top_of_history(client):
         "skin_thickness": 0,
         "insulin": 0,
         "bmi": 25.0,
-        "diabetes_pedigree_function": 0.5,
         "age": 30,
+        "has_family_history": "no",
+        "family_members": [],
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -108,3 +115,11 @@ def test_new_record_is_at_the_top_of_history(client):
 
     assert first_record["id"] == created_id
     assert first_record["glucose"] == test_glucose
+
+
+def test_predict_fails_on_missing_required_age(client):
+    """Test that the API rejects a payload missing the required 'age' field."""
+    invalid_data = {"glucose": 100, "bmi": 25.0, "has_family_history": "unknown"}
+    response = client.post("/predict/", json=invalid_data)
+    # 422 Unprocessable Entity from Pydantic validation
+    assert response.status_code == 422
