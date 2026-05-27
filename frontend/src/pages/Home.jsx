@@ -49,10 +49,6 @@ function Home() {
   const [familyMembers, setFamilyMembers] = useState([]);
   const [hasFamilyHistory, setHasFamilyHistory] = useState(null);
 
-  const [errors, setErrors] = useState({});
-  const [prediction, setPrediction] = useState(null);
-  const [loading, setLoading] = useState(false);
-
   const handleChange = (e) => {
     const { name, value, validity } = e.target;
 
@@ -208,7 +204,7 @@ function Home() {
                 />
               </div>
               <div className="lg:col-span-7">
-                <FamilyInterview 
+                <FamilyInterview
                   familyMembers={familyMembers}
                   setFamilyMembers={setFamilyMembers}
                   hasFamilyHistory={hasFamilyHistory}
