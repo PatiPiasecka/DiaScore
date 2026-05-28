@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import './FamilyInterview.css';
 
-const FamilyInterview = ({
-  familyMembers,
-  setFamilyMembers,
-  hasFamilyHistory,
-  setHasFamilyHistory
-}) => {
+const FamilyInterview = () => {
+  const [familyMembers, setFamilyMembers] = useState([]);
+  const [hasFamilyHistory, setHasFamilyHistory] = useState(null);
 
   const [currentMember, setCurrentMember] = useState({
     relationship: 'parent',

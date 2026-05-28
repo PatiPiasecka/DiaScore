@@ -40,14 +40,11 @@ function Home() {
     insulin: '',
     bmi: '',
     age: '',
+    diabetes_pedigree_function: 0.5,
   });
-
   const [errors, setErrors] = useState({});
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const [familyMembers, setFamilyMembers] = useState([]);
-  const [hasFamilyHistory, setHasFamilyHistory] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, validity } = e.target;
@@ -133,15 +130,17 @@ function Home() {
     const payload = {};
 
     for (const key in formData) {
+      if (key === 'diabetes_pedigree_function') {
+        payload[key] = Number(formData[key]);
+        continue;
+      }
+
       if (formData[key] === '' || !isFiniteNumber(formData[key])) {
         payload[key] = 0;
       } else {
         payload[key] = formData[key];
       }
     }
-
-    payload.has_family_history = hasFamilyHistory || "unknown";
-    payload.family_members = familyMembers;
 
     return payload;
   };
@@ -204,12 +203,7 @@ function Home() {
                 />
               </div>
               <div className="lg:col-span-7">
-                <FamilyInterview
-                  familyMembers={familyMembers}
-                  setFamilyMembers={setFamilyMembers}
-                  hasFamilyHistory={hasFamilyHistory}
-                  setHasFamilyHistory={setHasFamilyHistory}
-                />
+                <FamilyInterview />
               </div>
             </div>
 

@@ -1,12 +1,5 @@
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
-from typing import List, Optional
-
-
-class FamilyMember(BaseModel):
-    relationship: str
-    earlyOnset: bool
-    otherDiseases: List[str] = Field(default_factory=list)
 
 
 class DiabetesBase(BaseModel):
@@ -33,11 +26,7 @@ class DiabetesBase(BaseModel):
 
 
 class DiabetesCreate(DiabetesBase):
-    diabetes_pedigree_function: Optional[float] = Field(
-        None, ge=0, description="Diabetes pedigree function (genetic score)"
-    )
-    has_family_history: str = Field(default="unknown")
-    family_members: List[FamilyMember] = Field(default_factory=list)
+    pass
 
 
 class DiabetesRecord(DiabetesBase):
