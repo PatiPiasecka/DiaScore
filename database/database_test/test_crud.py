@@ -1,5 +1,5 @@
 import pytest
-from database import crud, models
+from database import crud, models, schemas
 
 
 # Optional helper fixture to insert a known test record
@@ -50,3 +50,34 @@ def test_get_single_record(db_session, seed_record):
     assert record.id == seed_record.id
     assert record.age == seed_record.age
     assert record.glucose == seed_record.glucose
+    
+# Dodaj ten test do pliku testów bazy danych (np. test_db.py)
+
+def test_create_and_get_prediction(db_session):
+    # Tworzymy fałszywe dane predykcji, pamiętając o nowym polu 'user_id'
+    prediction_data = schemas.PatientPredictionCreate(
+        pregnancies=1,
+        glucose=100,
+        blood_pressure=80,
+        skin_thickness=20,
+        insulin=50,
+        bmi=25.0,
+        diabetes_pedigree_function=0.5,
+        age=30,
+        user_id="test_user_123", # Nowe pole!
+        risk_score=0.25
+    )
+
+    db_prediction = crud.create_prediction(db_session, prediction=prediction_data)
+    
+    assert db_prediction.id is not None
+    assert db_prediction.user_id == "test_user_123"
+
+    user_predictions = crud.get_predictions_by_user(db_session, user_id="test_user_123")
+    
+    assert len(user_predictions) == 1
+    assert user_predictions[0].user_id == "test_user_123"
+
+    empty_predictions = crud.get_predictions_by_user(db_session, user_id="wrong_user")
+    
+    assert len(empty_predictions) == 0
