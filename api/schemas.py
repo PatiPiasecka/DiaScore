@@ -38,6 +38,8 @@ class DiabetesCreate(DiabetesBase):
     )
     has_family_history: str = Field(default="unknown")
     family_members: List[FamilyMember] = Field(default_factory=list)
+    
+    user_id: str = Field(..., description="Identyfikator użytkownika (np. z localStorage)")
 
 
 class DiabetesRecord(DiabetesBase):
@@ -53,6 +55,7 @@ class DiabetesRecord(DiabetesBase):
 class PredictionResponse(BaseModel):
     # Response from /predict/ endpoint - includes imputed patient data
     id: int
+    user_id: str
     pregnancies: int
     glucose: int
     blood_pressure: int
@@ -70,6 +73,7 @@ class PredictionResponse(BaseModel):
 class PredictionHistory(BaseModel):
     # Full prediction record for history endpoint
     id: int
+    user_id: str
     created_at: datetime
     pregnancies: int
     glucose: int
