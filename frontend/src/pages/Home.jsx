@@ -3,6 +3,7 @@ import MedicalForm from '../components/MedicalForm';
 import FamilyInterview from '../components/FamilyInterview';
 import PredictionResult from '../components/PredictionResult';
 import { IMPUTABLE_FIELDS } from '../constants/imputation';
+import { getOrCreateUserId } from '../utils/user';
 
 const INTEGER_FIELDS = [
   'pregnancies',
@@ -142,6 +143,7 @@ function Home() {
 
     payload.has_family_history = hasFamilyHistory || "unknown";
     payload.family_members = familyMembers;
+    payload.user_id = getOrCreateUserId();
 
     return payload;
   };
