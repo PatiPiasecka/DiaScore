@@ -63,7 +63,7 @@ def test_create_and_get_prediction(db_session):
         diabetes_pedigree_function=0.5,
         age=30,
         user_id="test_user_123",
-        risk_score=0.25
+        risk_score=0.25,
     )
 
     db_prediction = crud.create_prediction(db_session, prediction=prediction_data)

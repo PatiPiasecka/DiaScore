@@ -122,7 +122,12 @@ def test_new_record_is_at_the_top_of_history(client):
 
 def test_predict_fails_on_missing_required_age(client):
     """Test that the API rejects a payload missing the required 'age' field."""
-    invalid_data = {"glucose": 100, "bmi": 25.0, "has_family_history": "unknown", "user_id": "test_123"}
+    invalid_data = {
+        "glucose": 100,
+        "bmi": 25.0,
+        "has_family_history": "unknown",
+        "user_id": "test_123",
+    }
     response = client.post("/predict/", json=invalid_data)
     # 422 Unprocessable Entity from Pydantic validation
     assert response.status_code == 422

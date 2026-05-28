@@ -38,8 +38,10 @@ class DiabetesCreate(DiabetesBase):
     )
     has_family_history: str = Field(default="unknown")
     family_members: List[FamilyMember] = Field(default_factory=list)
-    
-    user_id: str = Field(..., description="Identyfikator użytkownika (np. z localStorage)")
+
+    user_id: str = Field(
+        ..., description="Identyfikator użytkownika (np. z localStorage)"
+    )
 
 
 class DiabetesRecord(DiabetesBase):

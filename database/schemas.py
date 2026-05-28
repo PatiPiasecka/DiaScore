@@ -13,12 +13,15 @@ class DiabetesBase(BaseModel):
     age: int
     outcome: int
 
+
 class DiabetesCreate(DiabetesBase):
     pass
+
 
 class Diabetes(DiabetesBase):
     id: int
     model_config = ConfigDict(from_attributes=True)
+
 
 class PatientPredictionBase(BaseModel):
     pregnancies: int
@@ -32,8 +35,10 @@ class PatientPredictionBase(BaseModel):
     risk_score: float
     user_id: str
 
+
 class PatientPredictionCreate(PatientPredictionBase):
     pass
+
 
 class PatientPrediction(PatientPredictionBase):
     id: int

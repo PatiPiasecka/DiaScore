@@ -143,7 +143,12 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     response_model=List[schemas.PredictionHistory],
     tags=["Data Management"],
 )
-def read_predictions(user_id: Optional[str] = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_predictions(
+    user_id: Optional[str] = None,
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+):
     """Retrieve prediction history (user predictions, not training data)."""
     if user_id:
         return crud.get_predictions_by_user(db, user_id=user_id, skip=skip, limit=limit)
