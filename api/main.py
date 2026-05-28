@@ -5,7 +5,7 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 
 from . import schemas
 from database import models, crud
@@ -117,12 +117,14 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
         bmi=data_dict["bmi"],
         diabetes_pedigree_function=data_dict["diabetes_pedigree_function"],
         age=data_dict["age"],
+        user_id=data.user_id,
         risk_score=risk_score,
     )
     db_prediction = crud.create_prediction(db=db, prediction=prediction_data)
 
     return schemas.PredictionResponse(
         id=db_prediction.id,
+        user_id=data.user_id,
         pregnancies=data_dict["pregnancies"],
         glucose=data_dict["glucose"],
         blood_pressure=data_dict["blood_pressure"],
@@ -141,10 +143,11 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     response_model=List[schemas.PredictionHistory],
     tags=["Data Management"],
 )
-def read_predictions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_predictions(user_id: Optional[str] = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """Retrieve prediction history (user predictions, not training data)."""
-    predictions = crud.get_predictions(db, skip=skip, limit=limit)
-    return predictions
+    if user_id:
+        return crud.get_predictions_by_user(db, user_id=user_id, skip=skip, limit=limit)
+    return crud.get_predictions(db, skip=skip, limit=limit)
 
 
 @app.get(

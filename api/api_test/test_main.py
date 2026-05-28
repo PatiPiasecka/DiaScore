@@ -41,6 +41,7 @@ def test_create_and_then_read_record(client):
         "family_members": [
             {"relationship": "parent", "earlyOnset": True, "otherDiseases": []}
         ],
+        "user_id": "test_123",
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -76,6 +77,7 @@ def test_database_updates_immediately(client):
         "age": 40,
         "has_family_history": "unknown",
         "family_members": [],
+        "user_id": "test_123",
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -102,6 +104,7 @@ def test_new_record_is_at_the_top_of_history(client):
         "age": 30,
         "has_family_history": "no",
         "family_members": [],
+        "user_id": "test_123",
     }
 
     post_response = client.post("/predict/", json=new_data)
@@ -119,7 +122,7 @@ def test_new_record_is_at_the_top_of_history(client):
 
 def test_predict_fails_on_missing_required_age(client):
     """Test that the API rejects a payload missing the required 'age' field."""
-    invalid_data = {"glucose": 100, "bmi": 25.0, "has_family_history": "unknown"}
+    invalid_data = {"glucose": 100, "bmi": 25.0, "has_family_history": "unknown", "user_id": "test_123"}
     response = client.post("/predict/", json=invalid_data)
     # 422 Unprocessable Entity from Pydantic validation
     assert response.status_code == 422

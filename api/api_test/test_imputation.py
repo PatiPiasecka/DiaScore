@@ -13,6 +13,7 @@ def test_predict_endpoint_applies_imputation(client):
         "bmi": 0.0,
         "diabetes_pedigree_function": 0.5,
         "age": 45,
+        "user_id": "test_123",
     }
 
     post_response = client.post("/predict/", json=new_data)
