@@ -57,9 +57,23 @@ def test_fill_missing_values_imputes_zeros_with_knn():
 
 def test_impute_record_tracks_missing_fields():
     """Test that the dictionary-based single-record imputer tracks replaced zero values."""
-    # Create a dummy fitted imputer to satisfy the function requirements
+    # Create a dummy fitted imputer using a DataFrame to prevent scikit-learn warnings
     imputer = KNNImputer(n_neighbors=1)
-    imputer.fit([[1, 100, 70, 20, 50, 25.0, 0.5, 30]])
+
+    dummy_data = pd.DataFrame(
+        [[1, 100, 70, 20, 50, 25.0, 0.5, 30]],
+        columns=[
+            "Pregnancies",
+            "Glucose",
+            "BloodPressure",
+            "SkinThickness",
+            "Insulin",
+            "BMI",
+            "DiabetesPedigreeFunction",
+            "Age",
+        ],
+    )
+    imputer.fit(dummy_data)
 
     # Provide a record with intentional missing values (0)
     record = {
