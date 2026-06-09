@@ -27,13 +27,17 @@ def test_predict_endpoint_applies_imputation(client):
     assert created["bmi"] != 0.0, "bmi should be imputed (not 0.0)"
 
     assert "diabetes_pedigree_function" in created
-    assert created["diabetes_pedigree_function"] > 0, "DPF should be automatically calculated"
+    assert created["diabetes_pedigree_function"] > 0, (
+        "DPF should be automatically calculated"
+    )
 
     # Verify that 'imputed_fields' tracked all the missing variables correctly
     assert "imputed_fields" in created
     expected_imputed = ["glucose", "blood_pressure", "skin_thickness", "insulin", "bmi"]
     for field in expected_imputed:
-        assert field in created["imputed_fields"], f"'{field}' should be present in imputed_fields list"
+        assert field in created["imputed_fields"], (
+            f"'{field}' should be present in imputed_fields list"
+        )
 
 
 def test_read_root(client):
@@ -108,7 +112,9 @@ def test_create_and_then_read_record(client):
 
     # Validate that fully provided data results in an empty imputed_fields list
     assert "imputed_fields" in fetched_data
-    assert len(fetched_data["imputed_fields"]) == 0, "No fields should be marked as imputed if user provided all data"
+    assert len(fetched_data["imputed_fields"]) == 0, (
+        "No fields should be marked as imputed if user provided all data"
+    )
 
 
 def test_database_updates_immediately(client):
@@ -138,7 +144,7 @@ def test_database_updates_immediately(client):
 
     assert new_record["id"] == created_id
     assert new_record["id"] != initial_top_id
-    
+
     # Verify that ONLY insulin is tracked as imputed
     assert "insulin" in new_record["imputed_fields"]
     assert "glucose" not in new_record["imputed_fields"]
@@ -183,6 +189,6 @@ def test_predict_fails_on_missing_required_age(client):
         "user_id": "test_123",
     }
     response = client.post("/predict/", json=invalid_data)
-    
+
     # 422 Unprocessable Entity is expected from Pydantic validation failure
     assert response.status_code == 422

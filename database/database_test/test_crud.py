@@ -65,14 +65,14 @@ def test_create_and_get_prediction(db_session):
         age=30,
         user_id="test_user_123",
         risk_score=0.25,
-        imputed_fields=["insulin", "bmi"]  # Simulating that these fields were imputed
+        imputed_fields=["insulin", "bmi"],  # Simulating that these fields were imputed
     )
 
     # Save to database
     db_prediction = crud.create_prediction(db_session, prediction=prediction_data)
     assert db_prediction.id is not None
     assert db_prediction.user_id == "test_user_123"
-    
+
     # Ensure the JSON column correctly stored the list
     assert db_prediction.imputed_fields == ["insulin", "bmi"]
 
@@ -80,7 +80,7 @@ def test_create_and_get_prediction(db_session):
     user_predictions = crud.get_predictions_by_user(db_session, user_id="test_user_123")
     assert len(user_predictions) == 1
     assert user_predictions[0].user_id == "test_user_123"
-    
+
     # Ensure the JSON column correctly deserializes the list on read
     assert user_predictions[0].imputed_fields == ["insulin", "bmi"]
 

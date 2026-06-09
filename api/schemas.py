@@ -39,9 +39,7 @@ class DiabetesCreate(DiabetesBase):
     has_family_history: str = Field(default="unknown")
     family_members: List[FamilyMember] = Field(default_factory=list)
 
-    user_id: str = Field(
-        ..., description="User id (UUID)"
-    )
+    user_id: str = Field(..., description="User id (UUID)")
 
 
 class DiabetesRecord(DiabetesBase):

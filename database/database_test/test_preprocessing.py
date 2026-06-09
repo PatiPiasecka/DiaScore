@@ -64,22 +64,22 @@ def test_impute_record_tracks_missing_fields():
     # Provide a record with intentional missing values (0)
     record = {
         "pregnancies": 1,
-        "glucose": 0,            # Should be tracked
+        "glucose": 0,  # Should be tracked
         "blood_pressure": 70,
-        "skin_thickness": 0,     # Should be tracked
+        "skin_thickness": 0,  # Should be tracked
         "insulin": 50,
         "bmi": 25.0,
         "has_family_history": "unknown",
         "family_members": [],
-        "age": 30
+        "age": 30,
     }
 
     result = impute_record(record, imputer)
-    
+
     assert "imputed_fields" in result
     assert "glucose" in result["imputed_fields"]
     assert "skin_thickness" in result["imputed_fields"]
-    
+
     # Fields that had valid data should not be in the tracked list
     assert "blood_pressure" not in result["imputed_fields"]
     assert "insulin" not in result["imputed_fields"]
