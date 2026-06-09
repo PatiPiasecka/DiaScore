@@ -68,6 +68,7 @@ class PredictionResponse(BaseModel):
     age: int
     risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
     is_diabetic_risk: bool = Field(...)
+    imputed_fields: List[str] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -86,5 +87,6 @@ class PredictionHistory(BaseModel):
     diabetes_pedigree_function: float
     age: int
     risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
+    imputed_fields: List[str] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
