@@ -192,3 +192,110 @@ def test_predict_fails_on_missing_required_age(client):
 
     # 422 Unprocessable Entity is expected from Pydantic validation failure
     assert response.status_code == 422
+
+
+def test_predict_fails_on_decreasing_age(client):
+    """Test that the API rejects a prediction if the age is lower than in the history."""
+    unique_user = "user_age_test_1"
+
+    # 1. Create the first record (Base history)
+    base_data = {
+        "pregnancies": 0,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,  # Age is 30
+        "user_id": unique_user,
+    }
+    client.post("/predict/", json=base_data)
+
+    # 2. Try to create a second record with a lower age (29)
+    invalid_data = {**base_data, "age": 29}
+    response = client.post("/predict/", json=invalid_data)
+
+    # 3. Assert it fails with 400 Bad Request
+    assert response.status_code == 400
+    assert "Age cannot be lower" in response.json()["detail"]
+
+
+def test_predict_fails_on_illogical_age_jump(client):
+    """Test that the API rejects a prediction if the age increases too fast."""
+    unique_user = "user_age_test_2"
+
+    # 1. Create the first record
+    base_data = {
+        "pregnancies": 0,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,
+        "user_id": unique_user,
+    }
+    client.post("/predict/", json=base_data)
+
+    # 2. Try to jump by 5 years instantly (timestamps will be in the same year)
+    invalid_data = {**base_data, "age": 35}
+    response = client.post("/predict/", json=invalid_data)
+
+    # 3. Assert it fails
+    assert response.status_code == 400
+    assert "logically inconsistent" in response.json()["detail"]
+
+
+def test_predict_fails_on_decreasing_pregnancies(client):
+    """Test that the API rejects a prediction if the number of pregnancies decreases."""
+    unique_user = "user_preg_test_1"
+
+    # 1. Create the first record with 2 pregnancies
+    base_data = {
+        "pregnancies": 2,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,
+        "user_id": unique_user,
+    }
+    client.post("/predict/", json=base_data)
+
+    # 2. Try to create a second record with 1 pregnancy
+    invalid_data = {**base_data, "pregnancies": 1}
+    response = client.post("/predict/", json=invalid_data)
+
+    # 3. Assert it fails
+    assert response.status_code == 400
+    assert "pregnancies cannot be lower" in response.json()["detail"]
+
+
+def test_predict_succeeds_on_logical_progression(client):
+    """Test that the API accepts valid chronological progression."""
+    unique_user = "user_logical_test_1"
+
+    # Create the first record
+    base_data = {
+        "pregnancies": 1,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,
+        "user_id": unique_user,
+    }
+    client.post("/predict/", json=base_data)
+
+    # Try to create a valid next record (+1 age, +1 pregnancy)
+    valid_data = {**base_data, "age": 31, "pregnancies": 2}
+    response = client.post("/predict/", json=valid_data)
+
+    # Assert it succeeds
+    assert response.status_code == 201

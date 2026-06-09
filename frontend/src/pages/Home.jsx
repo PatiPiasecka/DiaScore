@@ -44,6 +44,7 @@ function Home() {
   });
 
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(null); 
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -157,11 +158,14 @@ function Home() {
 
     setLoading(true);
     setPrediction(null);
+    setServerError(null);
 
     const payload = buildPayload();
 
     try {
-      const response = await fetch('http://localhost:8000/predict/', {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      
+      const response = await fetch(`${apiUrl}/predict/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -169,12 +173,23 @@ function Home() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error('Api Error');
+      // Intercept non-OK responses to extract business logic errors from the backend
+      if (!response.ok) {
+        const errorData = await response.json();
+        // Throw the detail provided by FastAPI (or a generic fallback)
+        throw new Error(errorData.detail || 'API Error: Failed to generate prediction');
+      }
 
       setPrediction(await response.json());
     } catch (error) {
       console.error('Something went wrong', error);
-      alert('Connecting with API is impossible, check FastAPI server');
+      
+      // Catch network errors or our thrown business logic errors and update the UI
+      if (error.message === 'Failed to fetch') {
+        setServerError('Connecting with API is impossible, check FastAPI server');
+      } else {
+        setServerError(error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -199,10 +214,12 @@ function Home() {
           <form onSubmit={handleSubmit} noValidate className="flex flex-col items-center">
             <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
               <div className="lg:col-span-5">
+                {/* Pass the serverError state down to the MedicalForm component */}
                 <MedicalForm
                   formData={formData}
                   handleChange={handleChange}
                   errors={errors}
+                  serverError={serverError} 
                 />
               </div>
               <div className="lg:col-span-7">
