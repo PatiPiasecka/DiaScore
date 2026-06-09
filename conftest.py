@@ -4,6 +4,7 @@ import os
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 
 from database.models import Base
 from api.main import app, get_db
@@ -19,20 +20,25 @@ def setup_test_db():
     if os.path.exists(ORIGINAL_DB):
         shutil.copyfile(ORIGINAL_DB, TEST_DB)
     else:
-        engine = create_engine(SQLALCHEMY_DATABASE_URL)
+        engine = create_engine(SQLALCHEMY_DATABASE_URL, poolclass=NullPool)
         Base.metadata.create_all(bind=engine)
 
     yield
 
     # delete after test
     if os.path.exists(TEST_DB):
-        os.remove(TEST_DB)
+        try:
+            os.remove(TEST_DB)
+        except PermissionError:
+            pass  # Windows fallback
 
 
 @pytest.fixture(scope="function")
 def client():
     engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        poolclass=NullPool,
     )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -53,7 +59,9 @@ def client():
 @pytest.fixture(scope="function")
 def db_session():
     engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+        SQLALCHEMY_DATABASE_URL,
+        connect_args={"check_same_thread": False},
+        poolclass=NullPool,
     )
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = TestingSessionLocal()
