@@ -11,6 +11,7 @@ const History = () => {
       try {
         const userId = getOrCreateUserId();
         
+        // TODO: change it when doing dockerization
         // Note that we only fetch history for a specific user_id
         const response = await fetch(`http://localhost:8000/predictions/?user_id=${userId}`);
         
