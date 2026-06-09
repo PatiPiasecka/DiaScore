@@ -40,7 +40,7 @@ class DiabetesCreate(DiabetesBase):
     family_members: List[FamilyMember] = Field(default_factory=list)
 
     user_id: str = Field(
-        ..., description="Identyfikator użytkownika (np. z localStorage)"
+        ..., description="User id (UUID)"
     )
 
 
