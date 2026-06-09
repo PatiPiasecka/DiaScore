@@ -119,6 +119,7 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
         age=data_dict["age"],
         user_id=data.user_id,
         risk_score=risk_score,
+        imputed_fields=data_dict.get("imputed_fields", []),
     )
     db_prediction = crud.create_prediction(db=db, prediction=prediction_data)
 
@@ -135,6 +136,7 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
         age=data_dict["age"],
         risk_score=risk_score,
         is_diabetic_risk=risk_score > 0.5,
+        imputed_fields=data_dict.get("imputed_fields", []),
     )
 
 
