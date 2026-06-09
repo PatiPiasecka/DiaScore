@@ -9,7 +9,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(PROJECT_ROOT))
 
 
-def train_and_save_scaler(train_csv_path: str, output_dir: str):
+def train_and_save_scaler(train_csv_path: str, output_dir: str) -> None:
     from database.preprocessing import IMPUTE_FEATURE_COLUMNS
 
     train_csv_path = Path(train_csv_path)

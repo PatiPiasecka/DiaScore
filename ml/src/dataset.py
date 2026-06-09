@@ -15,17 +15,17 @@ SCALER_PATH = PROJECT_ROOT / "ml" / "scaler" / "scaler.joblib"
 class DiabetesDataset(Dataset):
     """Loads a pre-split CSV (already imputed) and scales features."""
 
-    def __init__(self, data_path):
+    def __init__(self, data_path: str) -> None:
         self.data_path = data_path
         self.preprocessing_data()
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.features)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         return self.features[idx], self.labels[idx]
 
-    def preprocessing_data(self):
+    def preprocessing_data(self) -> None:
         self.df = pd.read_csv(self.data_path)
 
         # Scale features (scaler fitted on train only)

@@ -11,7 +11,7 @@ sys.path.append(str(PROJECT_ROOT))
 RANDOM_SEED = 1789
 
 
-def split_data(csv_path: str, output_dir: str):
+def split_data(csv_path: str, output_dir: str) -> None:
     from database.preprocessing import fill_missing_values, load_imputer
 
     df = pd.read_csv(csv_path)
