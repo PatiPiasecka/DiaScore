@@ -157,11 +157,13 @@ function Home() {
 
     setLoading(true);
     setPrediction(null);
-
+    
     const payload = buildPayload();
 
     try {
-      const response = await fetch('http://localhost:8000/predict/', {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      
+      const response = await fetch(`${apiUrl}/predict/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
