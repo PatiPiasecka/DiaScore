@@ -17,7 +17,7 @@ def train(num_epochs: int = 100) -> None:
 
     model = DiabetesModel()
 
-    weight = torch.tensor([1.86])
+    weight = torch.tensor([1.91])
     criterion = nn.BCEWithLogitsLoss(pos_weight=weight)
     optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-4)
 
