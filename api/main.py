@@ -121,7 +121,13 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     ]
 
     # ML MODEL PREDICTION
-    model = app.state.model
+    model = getattr(app.state, "model", None)
+    if model is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction temporarily unavailable because the ML model is not loaded.",
+        )
+
     try:
         risk_score = predict_diabetes_risk(features, model)
     except Exception as e:
