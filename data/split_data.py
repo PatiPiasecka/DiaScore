@@ -12,14 +12,10 @@ RANDOM_SEED = 1789
 
 
 def split_data(csv_path: str, output_dir: str) -> None:
-    from database.preprocessing import fill_missing_values, load_imputer
+    from database.preprocessing import fill_missing_values
+    from database.train_imputer import train_and_save_imputer
 
     df = pd.read_csv(csv_path)
-
-    # Imputation on the whole dataset
-    imputer_path = PROJECT_ROOT / "database" / "imputer.joblib"
-    imputer = load_imputer(str(imputer_path))
-    df = fill_missing_values(df, imputer)
 
     # Split: 70% train, 15% val, 15% test
     # stratify by Outcome - preserve class balance in each set (ml/notebooks/01_data_exploration.ipynb)
@@ -30,7 +26,16 @@ def split_data(csv_path: str, output_dir: str) -> None:
         temp_df, test_size=0.50, random_state=RANDOM_SEED, stratify=temp_df["Outcome"]
     )
 
+    imputer_path = PROJECT_ROOT / "database" / "imputer.joblib"
+    imputer = train_and_save_imputer(train_df, str(imputer_path))
+
+    train_df = fill_missing_values(train_df, imputer)
+    val_df = fill_missing_values(val_df, imputer)
+    test_df = fill_missing_values(test_df, imputer)
+
     output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     train_df.to_csv(output_dir / "train.csv", index=False)
     val_df.to_csv(output_dir / "val.csv", index=False)
     test_df.to_csv(output_dir / "test.csv", index=False)
