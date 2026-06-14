@@ -217,3 +217,6 @@ data/test.csv
 
 # Trained scaler (created by ml/scaler/train_scaler.py)
 ml/scaler/scaler.joblib
+
+# Trained_model
+weights
