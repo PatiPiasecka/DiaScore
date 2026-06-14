@@ -24,7 +24,7 @@ def load_model() -> DiabetesModel:
         if CACHED_MODEL is None:
             model = DiabetesModel()
             if not WEIGHTS_PATH.exists():
-                raise FileNotFoundError(f"Weights file notz found at: {WEIGHTS_PATH}.")
+                raise FileNotFoundError(f"Weights file not found at: {WEIGHTS_PATH}.")
 
             model.load_state_dict(torch.load(WEIGHTS_PATH, weights_only=True))
             model.eval()
