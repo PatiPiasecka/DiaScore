@@ -8,16 +8,14 @@ from dataset import DiabetesDataset
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 WEIGHTS_PATH = PROJECT_ROOT / "ml" / "weights" / "best_model.pt"
 DATA_PATH = PROJECT_ROOT / "data"
-
 TEST_PATH = DATA_PATH / "test.csv"
-
-model = DiabetesModel()
-model.load_state_dict(torch.load(WEIGHTS_PATH, weights_only=True))
-
-model.eval()
 
 
 def evaluate():
+    model = DiabetesModel()
+    model.load_state_dict(torch.load(WEIGHTS_PATH, weights_only=True))
+    model.eval()
+
     test_dataset = DiabetesDataset(TEST_PATH)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
