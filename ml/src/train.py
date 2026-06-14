@@ -16,10 +16,12 @@ def train(num_epochs: int = 100) -> None:
     train_loader, val_loader = get_diabetes_dataloaders(TRAIN_PATH, VAL_PATH)
 
     model = DiabetesModel()
-    criterion = nn.BCEWithLogitsLoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    best_accuracy = 0.0
+    weight = torch.tensor([1.86])
+    criterion = nn.BCEWithLogitsLoss(pos_weight=weight)
+    optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-4)
+
+    best_val_loss = float("inf")
 
     for epoch in range(num_epochs):
         # Training phase
@@ -61,8 +63,8 @@ def train(num_epochs: int = 100) -> None:
         )
 
         # Save best model
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             WEIGHTS_PATH.mkdir(parents=True, exist_ok=True)
             torch.save(model.state_dict(), WEIGHTS_PATH / "best_model.pt")
 

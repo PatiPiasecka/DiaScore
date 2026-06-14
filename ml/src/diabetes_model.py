@@ -8,7 +8,7 @@ class DiabetesModel(nn.Module):
         self.fc2 = nn.Linear(32, 16)
         self.fc3 = nn.Linear(16, 1)
 
-        self.dropout = nn.Dropout(0.2)
+        self.dropout = nn.Dropout(0.3)
         self.activation_function = nn.ReLU()
 
     def forward(self, x):
