@@ -16,7 +16,7 @@ def test_predict_endpoint_applies_imputation(client):
     }
 
     post_response = _post_predict(client, new_data)
-    
+
     if post_response is None:
         return
 
