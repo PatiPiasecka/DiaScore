@@ -11,10 +11,11 @@ const FORM_FIELDS = [
   { label: 'Age', name: 'age', max: 120, required: true },
 ];
 
-const MedicalForm = ({ formData, handleChange, errors }) => {
+const MedicalForm = ({ formData, handleChange, errors, serverError }) => {
   return (
     <div className="medical-form-wrapper">
       <h3 className="medical-form-title">Medical Parameters</h3>
+      
       <div className="medical-form-hints">
         <p className="medical-form-hint">
           You can leave glucose, blood pressure, skin thickness, insulin, or BMI
@@ -30,6 +31,13 @@ const MedicalForm = ({ formData, handleChange, errors }) => {
           prediction may be.
         </p>
       </div>
+
+      {/* Render the server validation error if it exists */}
+      {serverError && (
+        <div className="w-full bg-red-500/20 border border-red-500/50 text-red-200 p-4 rounded-xl mb-6 text-sm font-medium">
+          {serverError}
+        </div>
+      )}
 
       {FORM_FIELDS.map((field) => {
         const placeholder = field.required ? 'Required' : 'Optional';

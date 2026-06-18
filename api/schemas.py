@@ -39,6 +39,8 @@ class DiabetesCreate(DiabetesBase):
     has_family_history: str = Field(default="unknown")
     family_members: List[FamilyMember] = Field(default_factory=list)
 
+    user_id: str = Field(..., description="User id (UUID)")
+
 
 class DiabetesRecord(DiabetesBase):
     # Schema for reading training data from the database (GET /records/)
@@ -53,6 +55,7 @@ class DiabetesRecord(DiabetesBase):
 class PredictionResponse(BaseModel):
     # Response from /predict/ endpoint - includes imputed patient data
     id: int
+    user_id: str
     pregnancies: int
     glucose: int
     blood_pressure: int
@@ -63,6 +66,7 @@ class PredictionResponse(BaseModel):
     age: int
     risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
     is_diabetic_risk: bool = Field(...)
+    imputed_fields: List[str] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -70,6 +74,7 @@ class PredictionResponse(BaseModel):
 class PredictionHistory(BaseModel):
     # Full prediction record for history endpoint
     id: int
+    user_id: str
     created_at: datetime
     pregnancies: int
     glucose: int
@@ -80,5 +85,6 @@ class PredictionHistory(BaseModel):
     diabetes_pedigree_function: float
     age: int
     risk_score: float = Field(..., description="Probability of diabetes (0.0-1.0)")
+    imputed_fields: List[str] = Field(default_factory=list)
 
     model_config = ConfigDict(from_attributes=True)

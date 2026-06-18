@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
+from typing import List
 
 
 class DiabetesBase(BaseModel):
@@ -20,7 +21,6 @@ class DiabetesCreate(DiabetesBase):
 
 class Diabetes(DiabetesBase):
     id: int
-
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -34,6 +34,8 @@ class PatientPredictionBase(BaseModel):
     diabetes_pedigree_function: float
     age: int
     risk_score: float
+    user_id: str
+    imputed_fields: List[str] = Field(default_factory=list)
 
 
 class PatientPredictionCreate(PatientPredictionBase):
@@ -43,5 +45,4 @@ class PatientPredictionCreate(PatientPredictionBase):
 class PatientPrediction(PatientPredictionBase):
     id: int
     created_at: datetime
-
     model_config = ConfigDict(from_attributes=True)
