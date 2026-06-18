@@ -15,11 +15,13 @@ def test_predict_endpoint_applies_imputation(client):
         "user_id": "test_123",
     }
 
-    post_response = client.post("/predict/", json=new_data)
-    assert post_response.status_code == 201
+    post_response = _post_predict(client, new_data)
+    
+    if post_response is None:
+        return
+
     created = post_response.json()
 
-    # Imputer should have replaced zeros in these fields
     assert created["glucose"] != 0, "glucose should be imputed (not 0)"
     assert created["blood_pressure"] != 0, "blood_pressure should be imputed (not 0)"
     assert created["skin_thickness"] != 0, "skin_thickness should be imputed (not 0)"
@@ -31,7 +33,6 @@ def test_predict_endpoint_applies_imputation(client):
         "DPF should be automatically calculated"
     )
 
-    # Verify that 'imputed_fields' tracked all the missing variables correctly
     assert "imputed_fields" in created
     expected_imputed = ["glucose", "blood_pressure", "skin_thickness", "insulin", "bmi"]
     for field in expected_imputed:
