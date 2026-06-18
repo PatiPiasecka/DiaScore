@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from . import schemas
+from ml.src.predict import load_model, predict_diabetes_risk
 from database import models, crud
 from database.database import SessionLocal, engine
 from database import preprocessing
@@ -27,6 +28,13 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         logger.warning("Failed to load imputer from %s: %s", imputer_path, exc)
         app.state.imputer = None
+
+    # load prediction model
+    try:
+        app.state.model = load_model()
+    except Exception as exc:
+        logger.error("Failed to load ML model: %s", exc)
+        app.state.model = None
     yield
 
 
@@ -101,9 +109,30 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     data_dict = data.model_dump()
     data_dict = preprocessing.impute_record(data_dict, imputer)
 
-    # ML MODEL LOGIC (Placeholder) - returns risk score as float 0.0-1.0
-    glucose = data_dict.get("glucose", data.glucose)
-    risk_score = 0.8 if glucose > 140 else 0.3
+    features = [
+        float(data_dict["pregnancies"]),
+        float(data_dict["glucose"]),
+        float(data_dict["blood_pressure"]),
+        float(data_dict["skin_thickness"]),
+        float(data_dict["insulin"]),
+        float(data_dict["bmi"]),
+        float(data_dict["diabetes_pedigree_function"]),
+        float(data_dict["age"]),
+    ]
+
+    # ML MODEL PREDICTION
+    model = getattr(app.state, "model", None)
+    if model is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Prediction temporarily unavailable because the ML model is not loaded.",
+        )
+
+    try:
+        risk_score = predict_diabetes_risk(features, model)
+    except Exception as e:
+        logger.error("Prediction error: %s", e)
+        raise HTTPException(status_code=500, detail="Prediction logic failed.")
 
     # Create prediction record with float risk_score
     from database import schemas as db_schemas
