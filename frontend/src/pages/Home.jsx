@@ -44,7 +44,7 @@ function Home() {
   });
 
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState(null); 
+  const [serverError, setServerError] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -164,7 +164,10 @@ function Home() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      
+
+      const response = await fetch(`${apiUrl}/predict/`, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+
       const response = await fetch(`${apiUrl}/predict/`, {
         method: 'POST',
         headers: {
@@ -183,7 +186,7 @@ function Home() {
       setPrediction(await response.json());
     } catch (error) {
       console.error('Something went wrong', error);
-      
+
       // Catch network errors or our thrown business logic errors and update the UI
       if (error.message === 'Failed to fetch') {
         setServerError('Connecting with API is impossible, check FastAPI server');
@@ -219,7 +222,7 @@ function Home() {
                   formData={formData}
                   handleChange={handleChange}
                   errors={errors}
-                  serverError={serverError} 
+                  serverError={serverError}
                 />
               </div>
               <div className="lg:col-span-7">
