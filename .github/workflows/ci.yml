@@ -32,5 +32,10 @@ jobs:
       - name: Run Ruff (Formatter)
         run: uv run ruff format --check .
 
+      - name: Generate ML artifacts (Data & Model)
+        run: |
+          uv run python ml/src/split_data.py
+          uv run python ml/src/train.py
+
       - name: Run Tests
         run: uv run pytest -v
