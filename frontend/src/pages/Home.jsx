@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import MedicalForm from '../components/MedicalForm';
 import FamilyInterview from '../components/FamilyInterview';
 import PredictionResult from '../components/PredictionResult';
@@ -176,7 +177,7 @@ function Home() {
       setPrediction(await response.json());
     } catch (error) {
       console.error('Something went wrong', error);
-      alert('Connecting with API is impossible, check FastAPI server');
+      toast.error('Connecting with API is impossible, check FastAPI server');
     } finally {
       setLoading(false);
     }
