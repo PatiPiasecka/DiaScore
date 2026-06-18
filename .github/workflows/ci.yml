@@ -34,7 +34,7 @@ jobs:
 
       - name: Generate ML artifacts (Data & Model)
         run: |
-          uv run python ml/src/split_data.py
+          uv run python data/split_data.py
           uv run python ml/src/train.py
 
       - name: Run Tests
