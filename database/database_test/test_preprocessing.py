@@ -1,7 +1,6 @@
 import pandas as pd
-
-from database.preprocessing import fill_missing_values
-from database.preprocessing import calculate_dpf
+from sklearn.impute import KNNImputer
+from database.preprocessing import fill_missing_values, calculate_dpf, impute_record
 
 
 def test_dpf_calculation_no_history():
@@ -32,6 +31,7 @@ def test_dpf_calculation_medium_history():
 
 
 def test_fill_missing_values_imputes_zeros_with_knn():
+    """Test the pandas-based dataframe imputation logic used for training data."""
     df = pd.DataFrame(
         {
             "Glucose": [0, 120, 130],
@@ -53,4 +53,47 @@ def test_fill_missing_values_imputes_zeros_with_knn():
     assert cleaned.loc[0, "Pregnancies"] == 2
     assert (cleaned["Glucose"] != 0).all()
     assert not cleaned["Glucose"].isna().any()
-    assert cleaned.loc[0, "Pregnancies"] == 2
+
+
+def test_impute_record_tracks_missing_fields():
+    """Test that the dictionary-based single-record imputer tracks replaced zero values."""
+    # Create a dummy fitted imputer using a DataFrame to prevent scikit-learn warnings
+    imputer = KNNImputer(n_neighbors=1)
+
+    dummy_data = pd.DataFrame(
+        [[1, 100, 70, 20, 50, 25.0, 0.5, 30]],
+        columns=[
+            "Pregnancies",
+            "Glucose",
+            "BloodPressure",
+            "SkinThickness",
+            "Insulin",
+            "BMI",
+            "DiabetesPedigreeFunction",
+            "Age",
+        ],
+    )
+    imputer.fit(dummy_data)
+
+    # Provide a record with intentional missing values (0)
+    record = {
+        "pregnancies": 1,
+        "glucose": 0,  # Should be tracked
+        "blood_pressure": 70,
+        "skin_thickness": 0,  # Should be tracked
+        "insulin": 50,
+        "bmi": 25.0,
+        "has_family_history": "unknown",
+        "family_members": [],
+        "age": 30,
+    }
+
+    result = impute_record(record, imputer)
+
+    assert "imputed_fields" in result
+    assert "glucose" in result["imputed_fields"]
+    assert "skin_thickness" in result["imputed_fields"]
+
+    # Fields that had valid data should not be in the tracked list
+    assert "blood_pressure" not in result["imputed_fields"]
+    assert "insulin" not in result["imputed_fields"]

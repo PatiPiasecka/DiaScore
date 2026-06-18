@@ -115,6 +115,7 @@ def impute_record(record: dict, imputer) -> dict:
     record["diabetes_pedigree_function"] = calculate_dpf(family_members, has_history)
 
     if imputer is None:
+        record["imputed_fields"] = []
         return record
 
     # Map snake_case keys (from API) to PascalCase keys (from CSV dataset)
@@ -134,14 +135,21 @@ def impute_record(record: dict, imputer) -> dict:
 
     feature_cols = [c for c in IMPUTE_FEATURE_COLUMNS if c in data_cols]
     if not feature_cols:
+        record["imputed_fields"] = []
         return record
 
     row = {c: data_cols.get(c, None) for c in feature_cols}
+    imputed_fields = []
 
     # Replace zeros with NaN only for columns that represent missing markers
     for col in MISSING_VALUE_COLUMNS:
         if col in row and (row[col] == 0 or row[col] is None):
             row[col] = np.nan
+            # Find the original snake_case key
+            api_key = next((k for k, v in case_map.items() if v == col), col.lower())
+            imputed_fields.append(api_key)
+
+    record["imputed_fields"] = imputed_fields
 
     df = pd.DataFrame([row], columns=feature_cols)
     df = df.astype(float)

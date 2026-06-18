@@ -1,7 +1,7 @@
-import { NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ activeTab, setActiveTab }) => {
+const Navbar = () => {
   return (
     <nav className="mx-6 lg:mx-12 bg-brand-surface border-b border-brand-mauve rounded-[40px] px-8 py-4 mb-8 mt-8">
       <div className="w-full flex justify-between items-center lg:items-start">

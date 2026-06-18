@@ -80,5 +80,18 @@ def get_predictions(
     )
 
 
+def get_predictions_by_user(
+    db: Session, user_id: str, skip: int = 0, limit: int = 100
+) -> list[models.PatientPrediction]:
+    return (
+        db.query(models.PatientPrediction)
+        .filter(models.PatientPrediction.user_id == user_id)
+        .order_by(models.PatientPrediction.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+
 def get_predictions_count(db: Session) -> int:
     return db.query(models.PatientPrediction).count()
