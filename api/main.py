@@ -1,4 +1,5 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 from datetime import datetime, timezone
@@ -18,6 +19,8 @@ import joblib
 models.Base.metadata.create_all(bind=engine)
 
 logger = logging.getLogger(__name__)
+
+CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*").split(",")
 
 
 @asynccontextmanager
@@ -41,14 +44,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="DiaScore API",
-    description="API for diabates risk prediction",
+    description="API for diabetes risk prediction",
     version="1.0.0",
     lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
