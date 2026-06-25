@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
+import logo from '../assets/logo.svg';
 
 const Navbar = () => {
   return (
@@ -8,7 +9,11 @@ const Navbar = () => {
 
           {/*LOGO*/}
           <NavLink to="/" className="flex items-center gap-2 mt-2.5">
-            <div className="w-8 h-8 bg-brand-mauve rounded-lg flex items-center justify-center font-bold">D</div>
+            <img 
+              src={logo} 
+              alt="DiaScore Logo" 
+              className="w-8 h-8 object-contain" 
+            />
             <span className="text-xl font-black text-white tracking-tighter">DiaScore</span>
           </NavLink>
 
