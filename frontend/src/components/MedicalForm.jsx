@@ -5,7 +5,6 @@ const FORM_FIELDS = [
   { label: 'Pregnancies', name: 'pregnancies', max: 20, required: false },
   { label: 'Glucose (mg/dL)', name: 'glucose', max: 500, required: false },
   { label: 'Blood Pressure (mmHg)', name: 'blood_pressure', max: 300, required: false },
-  { label: 'Skin Thickness (mm)', name: 'skin_thickness', max: 100, required: false },
   { label: 'Insulin (µU/mL)', name: 'insulin', max: 1000, required: false },
   { label: 'BMI', name: 'bmi', max: 100, required: false },
   { label: 'Age', name: 'age', max: 120, required: true },
