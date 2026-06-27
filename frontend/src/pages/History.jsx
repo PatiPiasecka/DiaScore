@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from '../hooks/useHistory';
-// Import the separated CSV export utility
 import { downloadHistoryCSV } from '../utils/csvExport';
+import toast from 'react-hot-toast';
 
 const History = () => {
   const { predictions, loading, error } = useHistory();
@@ -40,8 +40,10 @@ const History = () => {
         {!loading && !error && predictions.length > 0 && (
           <div className="w-full flex justify-end mb-6">
             <button
-              // Call the utility function and pass the data
-              onClick={() => downloadHistoryCSV(predictions)}
+              onClick={() => {
+                downloadHistoryCSV(predictions);
+                toast.success('History exported successfully!');
+              }}
               className="px-5 py-2.5 bg-transparent border border-brand-lilac text-brand-lilac hover:bg-brand-lilac hover:text-black font-bold rounded-2xl text-sm transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">

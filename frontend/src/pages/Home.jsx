@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import MedicalForm from '../components/MedicalForm';
 import FamilyInterview from '../components/FamilyInterview';
 import PredictionResult from '../components/PredictionResult';
@@ -9,7 +10,6 @@ const INTEGER_FIELDS = [
   'pregnancies',
   'glucose',
   'blood_pressure',
-  'skin_thickness',
   'insulin',
   'age',
 ];
@@ -17,7 +17,6 @@ const INTEGER_FIELDS = [
 const MAX_LIMITS = {
   blood_pressure: 300,
   glucose: 500,
-  skin_thickness: 100,
   insulin: 1000,
   bmi: 100,
   age: 120,
@@ -37,7 +36,6 @@ function Home() {
     pregnancies: '',
     glucose: '',
     blood_pressure: '',
-    skin_thickness: '',
     insulin: '',
     bmi: '',
     age: '',
@@ -142,6 +140,7 @@ function Home() {
       }
     }
 
+    payload.skin_thickness = 0;
     payload.has_family_history = hasFamilyHistory || "unknown";
     payload.family_members = familyMembers;
     payload.user_id = getOrCreateUserId();
@@ -183,13 +182,7 @@ function Home() {
       setPrediction(await response.json());
     } catch (error) {
       console.error('Something went wrong', error);
-
-      // Catch network errors or our thrown business logic errors and update the UI
-      if (error.message === 'Failed to fetch') {
-        setServerError('Connecting with API is impossible, check FastAPI server');
-      } else {
-        setServerError(error.message);
-      }
+      toast.error('Connecting with API is impossible, check FastAPI server');
     } finally {
       setLoading(false);
     }

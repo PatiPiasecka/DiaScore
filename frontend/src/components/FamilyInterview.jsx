@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import './FamilyInterview.css';
 
 const FamilyInterview = ({
@@ -16,20 +17,20 @@ const FamilyInterview = ({
 
   const addMember = () => {
     if (familyMembers.length >= 15) {
-      alert("You can add maximum 15 family members.");
+      toast.error("You can add maximum 15 family members.");
       return;
     }
     if (currentMember.relationship === 'parent') {
       const parentCount = familyMembers.filter(m => m.relationship === 'parent').length;
       if (parentCount >= 2) {
-        alert("You can add maximum 2 parents.");
+        toast.error("You can add maximum 2 parents.");
         return;
       }
     }
     if (currentMember.relationship === 'grandparent') {
       const gpCount = familyMembers.filter(m => m.relationship === 'grandparent').length;
       if (gpCount >= 4) {
-        alert("You can add maximum 4 grandparents.");
+        toast.error("You can add maximum 4 grandparents.");
         return;
       }
     }
