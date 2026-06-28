@@ -1,7 +1,8 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from datetime import datetime, timezone
+
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -18,6 +19,8 @@ import joblib
 models.Base.metadata.create_all(bind=engine)
 
 logger = logging.getLogger(__name__)
+
+CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*").split(",")
 
 
 @asynccontextmanager
@@ -41,14 +44,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="DiaScore API",
-    description="API for diabates risk prediction",
+    description="API for diabetes risk prediction",
     version="1.0.0",
     lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -99,44 +102,6 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
     3. Run the ML prediction.
     4. Save the prediction to the database.
     """
-
-    # 1. LOGICAL VALIDATION AGAINST HISTORY
-    if data.user_id:
-        # Fetch the most recent prediction for this user
-        history = crud.get_predictions_by_user(
-            db, user_id=data.user_id, skip=0, limit=1
-        )
-
-        if history:
-            last_record = history[0]
-
-            # Validate Pregnancies: cannot be lower than the previous record
-            if data.pregnancies < last_record.pregnancies:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Number of pregnancies cannot be lower than in your previous record ({last_record.pregnancies}).",
-                )
-
-            # Validate Age: check logical progression over time
-            last_date = last_record.created_at
-            current_date = datetime.now(timezone.utc)
-            years_diff = current_date.year - last_date.year
-
-            last_age = last_record.age
-            min_logical_age = last_age  # Age cannot decrease
-            max_logical_age = last_age + years_diff + 1  # +1 to account for birthdays
-
-            if data.age < min_logical_age:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Age cannot be lower than your previously recorded age ({last_age}).",
-                )
-
-            if data.age > max_logical_age:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Provided age ({data.age}) is logically inconsistent with your history. Based on your last record from {last_date.year}, your maximum age should be {max_logical_age}.",
-                )
 
     # DATA IMPUTATION
     imputer = getattr(app.state, "imputer", None)

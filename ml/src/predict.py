@@ -11,7 +11,9 @@ WEIGHTS_PATH = PROJECT_ROOT / "ml" / "weights" / "best_model.pt"
 SCALER_PATH = PROJECT_ROOT / "ml" / "scaler" / "scaler.joblib"
 
 model_lock = threading.Lock()
+scaler_lock = threading.Lock()
 CACHED_MODEL = None
+CACHED_SCALER = None
 
 
 def load_model() -> DiabetesModel:
@@ -33,6 +35,19 @@ def load_model() -> DiabetesModel:
     return CACHED_MODEL
 
 
+def _load_scaler():
+    global CACHED_SCALER
+
+    if CACHED_SCALER is not None:
+        return CACHED_SCALER
+
+    with scaler_lock:
+        if CACHED_SCALER is None:
+            CACHED_SCALER = joblib.load(SCALER_PATH)
+
+    return CACHED_SCALER
+
+
 def predict_diabetes_risk(features: list[float], model) -> float:
     if len(features) != 8:
         raise ValueError(
@@ -43,7 +58,7 @@ def predict_diabetes_risk(features: list[float], model) -> float:
         model = load_model()
 
     # Scale features using the same scaler used during training
-    scaler = joblib.load(SCALER_PATH)
+    scaler = _load_scaler()
     features_scaled = scaler.transform(np.array(features).reshape(1, -1))
 
     patient_tensor = torch.tensor(features_scaled, dtype=torch.float32)

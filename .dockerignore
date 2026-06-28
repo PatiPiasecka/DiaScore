@@ -1,0 +1,43 @@
+# ─────────────────────────────────────────────────────────────
+# .dockerignore — files to EXCLUDE from Docker build context
+# ─────────────────────────────────────────────────────────────
+# This works like .gitignore but for Docker.
+# It prevents unnecessary files from being sent to the Docker
+# daemon, making builds faster and images smaller.
+
+# Python virtual environment (we install fresh in Docker)
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Git
+.git/
+.github/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Testing artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.ruff_cache/
+
+# Frontend (has its own Dockerfile)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# Docker files (no recursion!)
+docker-compose.yml
+.dockerignore
+
+# Documentation
+docs/
+*.md
+
+# Notebooks
+ml/notebooks/
