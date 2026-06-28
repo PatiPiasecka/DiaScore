@@ -182,7 +182,7 @@ function Home() {
       setPrediction(await response.json());
     } catch (error) {
       console.error('Something went wrong', error);
-      toast.error('Connecting with API is impossible, check FastAPI server');
+      toast.error('503, Service unavailable');
     } finally {
       setLoading(false);
     }
