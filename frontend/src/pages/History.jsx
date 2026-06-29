@@ -97,7 +97,6 @@ const History = () => {
                     <th className="p-4 font-semibold">Preg.</th>
                     <th className="p-4 font-semibold">Glucose</th>
                     <th className="p-4 font-semibold">BP</th>
-                    <th className="p-4 font-semibold">Skin</th>
                     <th className="p-4 font-semibold">Insulin</th>
                     <th className="p-4 font-semibold">BMI</th>
                     <th className="p-4 font-semibold text-right">Risk Score</th>

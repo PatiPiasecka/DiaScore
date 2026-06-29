@@ -21,7 +21,6 @@ const HistoryTableRow = ({ record, isLast, onDelete }) => {
       <td className="p-4 text-white/80">{record.pregnancies}</td>
       <td className="p-4 text-white/80">{renderDataCell('glucose', record.glucose)}</td>
       <td className="p-4 text-white/80">{renderDataCell('blood_pressure', record.blood_pressure)}</td>
-      <td className="p-4 text-white/80">{renderDataCell('skin_thickness', record.skin_thickness)}</td>
       <td className="p-4 text-white/80">{renderDataCell('insulin', record.insulin)}</td>
       <td className="p-4 text-white/80">{renderDataCell('bmi', record.bmi?.toFixed(1))}</td>
       <td className="p-4 font-bold text-right">

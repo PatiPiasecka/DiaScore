@@ -23,6 +23,9 @@ const MedicalForm = ({ formData, handleChange, errors, serverError }) => {
           If left blank, the pregnancies field is automatically treated as 0 (no pregnancies) and does not affect the reliability of the prediction.
         </p>
         <p className="medical-form-hint">
+          Blood pressure should be entered as diastolic blood pressure (the lower value in a reading, e.g. in 120/80 → enter 80. Use mmHg. Leave blank if unknown.
+        </p>
+        <p className="medical-form-hint">
           The more test results that are missing, the less reliable the prediction may be.
         </p>
       </div>
