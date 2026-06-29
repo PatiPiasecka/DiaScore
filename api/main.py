@@ -1,6 +1,8 @@
 import logging
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
+
 
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +19,8 @@ import joblib
 models.Base.metadata.create_all(bind=engine)
 
 logger = logging.getLogger(__name__)
+
+CORS_ORIGINS = os.environ.get("CORS_ORIGINS", "*").split(",")
 
 
 @asynccontextmanager
@@ -40,14 +44,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="DiaScore API",
-    description="API for diabates risk prediction",
+    description="API for diabetes risk prediction",
     version="1.0.0",
     lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,12 +97,13 @@ def read_record(record_id: int, db: Session = Depends(get_db)):
 )
 def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db)):
     """
-    1. Receive Patient Data
-    2. Runs the ML prediction (in future)
-    3. Save the prediction to the database
-    4. Returns the risk score and classification
+    1. Check user's history for logical consistency (age, pregnancies).
+    2. Receive Patient Data and Apply Imputation.
+    3. Run the ML prediction.
+    4. Save the prediction to the database.
     """
-    # Apply imputation for missing markers (0 values) if imputer is available
+
+    # DATA IMPUTATION
     imputer = getattr(app.state, "imputer", None)
     if imputer is None:
         raise HTTPException(
@@ -134,7 +139,7 @@ def create_prediction(data: schemas.DiabetesCreate, db: Session = Depends(get_db
         logger.error("Prediction error: %s", e)
         raise HTTPException(status_code=500, detail="Prediction logic failed.")
 
-    # Create prediction record with float risk_score
+    # SAVE PREDICTION TO DATABASE
     from database import schemas as db_schemas
 
     prediction_data = db_schemas.PatientPredictionCreate(

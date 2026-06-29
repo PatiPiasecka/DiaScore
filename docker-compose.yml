@@ -1,0 +1,41 @@
+
+# Docker Compose — orchestrates ALL containers at once
+
+# Usage:
+#   docker compose up --build     # build & start all services
+#   docker compose up -d          # start in background (detached)
+#   docker compose down           # stop everything
+#   docker compose logs -f api    # follow logs of api service
+
+services:
+  # ── Backend API ────────────────────────────────────────────
+  api:
+    build:
+      context: .                # use the root directory as build context
+      dockerfile: api/Dockerfile
+    container_name: diascore-api
+    ports:
+      - "8000:8000"             # host:container — access API at localhost:8000
+    volumes:
+      - db-data:/app/database   # persist the SQLite database between restarts
+    environment:
+      - PYTHONUNBUFFERED=1      # see Python logs immediately (no buffering)
+      - CORS_ORIGINS=http://localhost:3000
+    restart: unless-stopped     # auto-restart if it crashes
+
+  # ── Frontend ───────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: diascore-frontend
+    ports:
+      - "3000:80"               # access frontend at localhost:3000
+    depends_on:
+      - api                     # start API before frontend
+    restart: unless-stopped
+
+volumes:
+  db-data:

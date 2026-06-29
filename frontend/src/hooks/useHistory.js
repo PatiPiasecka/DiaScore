@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getOrCreateUserId } from '../utils/user';
+import { getOrCreateUserId } from '../utils/user';
 
 export const useHistory = () => {
   const [predictions, setPredictions] = useState([]);

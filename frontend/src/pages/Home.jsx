@@ -42,6 +42,7 @@ function Home() {
   });
 
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -156,7 +157,8 @@ function Home() {
 
     setLoading(true);
     setPrediction(null);
-    
+    setServerError(null);
+
     const payload = buildPayload();
 
     try {
@@ -214,10 +216,12 @@ function Home() {
           <form onSubmit={handleSubmit} noValidate className="flex flex-col items-center">
             <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
               <div className="lg:col-span-5">
+                {/* Pass the serverError state down to the MedicalForm component */}
                 <MedicalForm
                   formData={formData}
                   handleChange={handleChange}
                   errors={errors}
+                  serverError={serverError}
                 />
               </div>
               <div className="lg:col-span-7">

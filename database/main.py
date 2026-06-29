@@ -4,7 +4,7 @@ import pandas as pd
 
 from .database import SessionLocal, engine
 from .preprocessing import fill_missing_values
-import models
+from . import models
 
 models.Base.metadata.create_all(bind=engine)
 

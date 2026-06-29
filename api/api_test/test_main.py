@@ -97,7 +97,7 @@ def test_create_and_then_read_record(client):
         "family_members": [
             {"relationship": "parent", "earlyOnset": True, "otherDiseases": []}
         ],
-        "user_id": "test_123",
+        "user_id": "test_12",
     }
 
     post_response = _post_predict(client, new_data)
@@ -143,7 +143,7 @@ def test_database_updates_immediately(client):
         "age": 40,
         "has_family_history": "unknown",
         "family_members": [],
-        "user_id": "test_123",
+        "user_id": "test_1",
     }
 
     post_response = _post_predict(client, new_data)
@@ -176,7 +176,7 @@ def test_new_record_is_at_the_top_of_history(client):
         "age": 30,
         "has_family_history": "no",
         "family_members": [],
-        "user_id": "test_123",
+        "user_id": "test_1234",
     }
 
     post_response = _post_predict(client, new_data)
@@ -201,9 +201,35 @@ def test_predict_fails_on_missing_required_age(client):
         "glucose": 100,
         "bmi": 25.0,
         "has_family_history": "unknown",
-        "user_id": "test_123",
+        "user_id": "test_1234",
     }
     response = client.post("/predict/", json=invalid_data)
 
     # 422 Unprocessable Entity is expected from Pydantic validation failure
     assert response.status_code == 422
+
+
+def test_predict_succeeds_on_logical_progression(client):
+    """Test that the API accepts valid chronological progression."""
+    unique_user = "user_logical_test_1"
+
+    # Create the first record
+    base_data = {
+        "pregnancies": 1,
+        "glucose": 100,
+        "blood_pressure": 70,
+        "skin_thickness": 20,
+        "insulin": 50,
+        "bmi": 22.0,
+        "diabetes_pedigree_function": 0.5,
+        "age": 30,
+        "user_id": unique_user,
+    }
+    client.post("/predict/", json=base_data)
+
+    # Try to create a valid next record (+1 age, +1 pregnancy)
+    valid_data = {**base_data, "age": 31, "pregnancies": 2}
+    response = client.post("/predict/", json=valid_data)
+
+    # Assert it succeeds
+    assert response.status_code == 201
