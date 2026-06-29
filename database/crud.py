@@ -95,3 +95,37 @@ def get_predictions_by_user(
 
 def get_predictions_count(db: Session) -> int:
     return db.query(models.PatientPrediction).count()
+
+
+def delete_prediction(db: Session, prediction_id: int) -> bool:
+    """Delete a patient prediction by id. Returns True if deleted, False if not found."""
+    prediction = (
+        db.query(models.PatientPrediction)
+        .filter(models.PatientPrediction.id == prediction_id)
+        .first()
+    )
+    if prediction is None:
+        return False
+
+    try:
+        db.delete(prediction)
+        db.commit()
+        return True
+    except Exception:
+        db.rollback()
+        raise
+
+
+def delete_predictions_by_user(db: Session, user_id: str) -> int:
+    """Delete all predictions for a specific user. Returns the number of deleted rows."""
+    try:
+        deleted_count = (
+            db.query(models.PatientPrediction)
+            .filter(models.PatientPrediction.user_id == user_id)
+            .delete()
+        )
+        db.commit()
+        return deleted_count
+    except Exception:
+        db.rollback()
+        raise

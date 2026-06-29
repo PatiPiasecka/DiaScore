@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import MedicalForm from '../components/MedicalForm';
 import FamilyInterview from '../components/FamilyInterview';
 import PredictionResult from '../components/PredictionResult';
@@ -9,7 +10,6 @@ const INTEGER_FIELDS = [
   'pregnancies',
   'glucose',
   'blood_pressure',
-  'skin_thickness',
   'insulin',
   'age',
 ];
@@ -17,7 +17,6 @@ const INTEGER_FIELDS = [
 const MAX_LIMITS = {
   blood_pressure: 300,
   glucose: 500,
-  skin_thickness: 100,
   insulin: 1000,
   bmi: 100,
   age: 120,
@@ -37,7 +36,6 @@ function Home() {
     pregnancies: '',
     glucose: '',
     blood_pressure: '',
-    skin_thickness: '',
     insulin: '',
     bmi: '',
     age: '',
@@ -142,6 +140,7 @@ function Home() {
       }
     }
 
+    payload.skin_thickness = 0;
     payload.has_family_history = hasFamilyHistory || "unknown";
     payload.family_members = familyMembers;
     payload.user_id = getOrCreateUserId();
@@ -163,7 +162,8 @@ function Home() {
     const payload = buildPayload();
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) throw new Error('VITE_API_URL is not defined');
 
       const response = await fetch(`${apiUrl}/predict/`, {
         method: 'POST',
@@ -173,23 +173,25 @@ function Home() {
         body: JSON.stringify(payload),
       });
 
-      // Intercept non-OK responses to extract business logic errors from the backend
-      if (!response.ok) {
-        const errorData = await response.json();
-        // Throw the detail provided by FastAPI (or a generic fallback)
-        throw new Error(errorData.detail || 'API Error: Failed to generate prediction');
-      }
-
-      setPrediction(await response.json());
-    } catch (error) {
-      console.error('Something went wrong', error);
-
-      // Catch network errors or our thrown business logic errors and update the UI
-      if (error.message === 'Failed to fetch') {
-        setServerError('Connecting with API is impossible, check FastAPI server');
+      const contentType = response.headers.get('content-type') || '';
+      let responseData;
+      if (contentType.includes('application/json')) {
+        responseData = await response.json();
       } else {
-        setServerError(error.message);
+        responseData = await response.text();
       }
+
+      if (!response.ok) {
+        const msg = responseData?.detail || responseData || 'Unexpected error occurred';
+        // Format: <status> <statusText>: <message>
+        toast.error(`${response.status} ${response.statusText}: ${msg}`);
+        return;
+      }
+
+      setPrediction(responseData);
+    } catch (error) {
+      console.error('System error:', error);
+      toast.error('Service is currently unavailable. Please try again later.');
     } finally {
       setLoading(false);
     }

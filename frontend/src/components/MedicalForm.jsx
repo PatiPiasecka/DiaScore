@@ -5,7 +5,6 @@ const FORM_FIELDS = [
   { label: 'Pregnancies', name: 'pregnancies', max: 20, required: false },
   { label: 'Glucose (mg/dL)', name: 'glucose', max: 500, required: false },
   { label: 'Blood Pressure (mmHg)', name: 'blood_pressure', max: 300, required: false },
-  { label: 'Skin Thickness (mm)', name: 'skin_thickness', max: 100, required: false },
   { label: 'Insulin (µU/mL)', name: 'insulin', max: 1000, required: false },
   { label: 'BMI', name: 'bmi', max: 100, required: false },
   { label: 'Age', name: 'age', max: 120, required: true },
@@ -18,17 +17,13 @@ const MedicalForm = ({ formData, handleChange, errors, serverError }) => {
       
       <div className="medical-form-hints">
         <p className="medical-form-hint">
-          You can leave glucose, blood pressure, skin thickness, insulin, or BMI
-          blank (or enter 0) when a test was not done — we will estimate those
-          values for the analysis.
+          If your glucose, blood pressure, insulin, or BMI was not measured, you can leave the field blank (or enter 0). We will estimate the missing values for the analysis.
         </p>
         <p className="medical-form-hint">
-          Leaving pregnancies blank does not affect prediction reliability — it
-          is automatically counted as 0 (no pregnancies).
+          If left blank, the pregnancies field is automatically treated as 0 (no pregnancies) and does not affect the reliability of the prediction.
         </p>
         <p className="medical-form-hint">
-          The more other test results you leave blank, the less reliable the
-          prediction may be.
+          The more test results that are missing, the less reliable the prediction may be.
         </p>
       </div>
 

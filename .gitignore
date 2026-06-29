@@ -206,17 +206,10 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-#test
+# Test database (auto-generated during tests)
 database/test_diabetes.db
-database/imputer.joblib
 
-# Generated data splits (created by data/split_data.py)
-data/train.csv
-data/val.csv
-data/test.csv
-
-# Trained scaler (created by ml/scaler/train_scaler.py)
-ml/scaler/scaler.joblib
-
-# Trained_model
-weights
+# NOTE: database/imputer.joblib, ml/scaler/scaler.joblib and ml/weights/
+# are intentionally tracked in git so they are included in the Docker image
+# and available on the server without needing to retrain.
+# To regenerate: python data/split_data.py && python ml/src/train.py

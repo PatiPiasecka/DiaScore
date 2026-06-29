@@ -1,27 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from '../hooks/useHistory';
-// Import the separated CSV export utility
 import { downloadHistoryCSV } from '../utils/csvExport';
+import toast from 'react-hot-toast';
+import ConfirmModal from '../components/ConfirmModal';
+import HistoryTableRow from '../components/HistoryTableRow';
 
 const History = () => {
-  const { predictions, loading, error } = useHistory();
+  const { predictions, loading, error, deletePrediction, deleteAllPredictions } = useHistory();
+  
+  const [recordToDelete, setRecordToDelete] = useState(null); 
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
 
-  /**
-   * Helper function to check if a specific field was imputed by the KNN model.
-   */
-  const renderDataCell = (record, fieldKey, value) => {
-    if (record.imputed_fields?.includes(fieldKey)) {
-      return (
-        <span className="text-white/40 italic font-semibold" title="Imputed value">
-          N/A
-        </span>
-      );
+  const executeAction = async () => {
+    if (isDeletingAll) {
+      setIsDeletingAll(false);
+      const result = await deleteAllPredictions();
+      if (result.success) {
+        toast.success('All records deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
+    } else if (recordToDelete) {
+      const id = recordToDelete;
+      setRecordToDelete(null);
+      const result = await deletePrediction(id);
+      if (result.success) {
+        toast.success('Record deleted successfully');
+      } else {
+        toast.error(result.message);
+      }
     }
-    return value;
+  };
+
+  const handleCloseModal = () => {
+    setRecordToDelete(null);
+    setIsDeletingAll(false);
   };
 
   return (
-    <div className="w-full text-white flex flex-col font-sans items-center py-10 px-6 lg:px-12">
+    <div className="w-full text-white flex flex-col font-sans items-center py-10 px-6 lg:px-12 relative">
       <div className="flex flex-col items-center mb-12">
         <h1 className="text-4xl lg:text-6xl font-black tracking-tight text-center drop-shadow-md">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-lilac to-[#dca3d6]">
@@ -36,12 +53,25 @@ const History = () => {
 
       <div className="w-full max-w-[1200px] bg-brand-surface border border-brand-mauve rounded-[40px] p-8 shadow-2xl overflow-hidden mx-auto">
         
-        {/* Top actions bar containing the Export button */}
         {!loading && !error && predictions.length > 0 && (
-          <div className="w-full flex justify-end mb-6">
+          <div className="w-full flex justify-end gap-4 mb-6">
+            {/* Delete All Button */}
             <button
-              // Call the utility function and pass the data
-              onClick={() => downloadHistoryCSV(predictions)}
+              onClick={() => setIsDeletingAll(true)}
+              className="px-5 py-2.5 bg-transparent border border-[#ff7b7b]/50 text-[#ff7b7b] hover:bg-[#ff7b7b] hover:text-black font-bold rounded-2xl text-sm transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-[18px] h-[18px]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M20 7H4m3 0v12a2 2 0 002 2h6a2 2 0 002-2V7M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" />
+              </svg>
+              Delete All
+            </button>
+
+            {/* Export Button */}
+            <button
+              onClick={() => {
+                downloadHistoryCSV(predictions);
+                toast.success('History exported successfully!');
+              }}
               className="px-5 py-2.5 bg-transparent border border-brand-lilac text-brand-lilac hover:bg-brand-lilac hover:text-black font-bold rounded-2xl text-sm transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
@@ -52,78 +82,58 @@ const History = () => {
           </div>
         )}
 
-        {loading && (
-          <p className="text-center text-white/60 font-medium py-8 animate-pulse">
-            Loading history...
-          </p>
-        )}
-        
-        {error && (
-          <p className="text-center text-red-400 py-8">
-            Error: {error}
-          </p>
-        )}
-
-        {!loading && !error && predictions.length === 0 && (
-          <p className="text-center text-white/60 py-8">
-            No history saved. Make your first prediction!
-          </p>
-        )}
+        {loading && <p className="text-center text-white/60 font-medium py-8 animate-pulse">Loading history...</p>}
+        {error && <p className="text-center text-red-400 py-8">Error: {error}</p>}
+        {!loading && !error && predictions.length === 0 && <p className="text-center text-white/60 py-8">No history saved. Make your first prediction!</p>}
 
         {!loading && !error && predictions.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[1000px]">
-              <thead>
-                <tr className="border-b border-brand-mauve/30 text-white/80 uppercase text-xs tracking-wider">
-                  <th className="p-4 font-semibold">Date</th>
-                  <th className="p-4 font-semibold">Age</th>
-                  <th className="p-4 font-semibold" title="Pregnancies">Preg.</th>
-                  <th className="p-4 font-semibold">Glucose</th>
-                  <th className="p-4 font-semibold" title="Blood Pressure">BP</th>
-                  <th className="p-4 font-semibold" title="Skin Thickness">Skin</th>
-                  <th className="p-4 font-semibold">Insulin</th>
-                  <th className="p-4 font-semibold">BMI</th>
-                  <th className="p-4 font-semibold text-right">Risk Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {predictions.map((record) => (
-                  <tr 
-                    key={record.id} 
-                    className="border-b border-brand-mauve/10 hover:bg-white/5 transition-colors"
-                  >
-                    <td className="p-4 text-white/80 whitespace-nowrap">
-                      {new Date(record.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="p-4 text-white/80">{record.age}</td>
-                    <td className="p-4 text-white/80">{record.pregnancies}</td>
-                    <td className="p-4 text-white/80">
-                      {renderDataCell(record, 'glucose', record.glucose)}
-                    </td>
-                    <td className="p-4 text-white/80">
-                      {renderDataCell(record, 'blood_pressure', record.blood_pressure)}
-                    </td>
-                    <td className="p-4 text-white/80">
-                      {renderDataCell(record, 'skin_thickness', record.skin_thickness)}
-                    </td>
-                    <td className="p-4 text-white/80">
-                      {renderDataCell(record, 'insulin', record.insulin)}
-                    </td>
-                    <td className="p-4 text-white/80">
-                      {renderDataCell(record, 'bmi', record.bmi?.toFixed(1))}
-                    </td>
-                    <td className="p-4 font-bold text-right">
-                      <span className={record.risk_score > 0.5 ? 'text-[#ff7b7b]' : 'text-[#84ff9f]'}>
-                        {(record.risk_score * 100).toFixed(1)}%
-                      </span>
-                    </td>
+          <div className="overflow-x-auto w-full">
+            <div className="min-w-[1000px] rounded-b-[20px] overflow-hidden">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-brand-mauve/30 text-white/80 uppercase text-xs tracking-wider">
+                    <th className="p-4 font-semibold">Date</th>
+                    <th className="p-4 font-semibold">Age</th>
+                    <th className="p-4 font-semibold">Preg.</th>
+                    <th className="p-4 font-semibold">Glucose</th>
+                    <th className="p-4 font-semibold">BP</th>
+                    <th className="p-4 font-semibold">Skin</th>
+                    <th className="p-4 font-semibold">Insulin</th>
+                    <th className="p-4 font-semibold">BMI</th>
+                    <th className="p-4 font-semibold text-right">Risk Score</th>
+                    <th className="p-4 font-semibold text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {predictions.map((record, index) => (
+                    <HistoryTableRow 
+                      key={record.id} 
+                      record={record} 
+                      isLast={index === predictions.length - 1} 
+                      onDelete={setRecordToDelete}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={!!recordToDelete || isDeletingAll}
+        onClose={handleCloseModal}
+        onConfirm={executeAction}
+        title={isDeletingAll ? "Delete all records?" : "Delete record?"}
+        message={
+          isDeletingAll 
+            ? "Are you absolutely sure you want to delete all your predictions? This action cannot be undone and your entire history will be wiped." 
+            : "Are you sure you want to delete this prediction from your history? This action cannot be undone."
+        }
+        confirmText="Yes, Delete"
+      />
+
     </div>
   );
 };
