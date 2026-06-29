@@ -161,7 +161,8 @@ function Home() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL;
-      
+      if (!apiUrl) throw new Error('VITE_API_URL is not defined');
+
       const response = await fetch(`${apiUrl}/predict/`, {
         method: 'POST',
         headers: {
@@ -170,12 +171,25 @@ function Home() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error('Api Error');
+      const contentType = response.headers.get('content-type') || '';
+      let responseData;
+      if (contentType.includes('application/json')) {
+        responseData = await response.json();
+      } else {
+        responseData = await response.text();
+      }
 
-      setPrediction(await response.json());
+      if (!response.ok) {
+        const msg = responseData?.detail || responseData || 'Unexpected error occurred';
+        // Format: <status> <statusText>: <message>
+        toast.error(`${response.status} ${response.statusText}: ${msg}`);
+        return;
+      }
+
+      setPrediction(responseData);
     } catch (error) {
-      console.error('Something went wrong', error);
-      toast.error('Connecting with API is impossible, check FastAPI server');
+      console.error('System error:', error);
+      toast.error('Service is currently unavailable. Please try again later.');
     } finally {
       setLoading(false);
     }
