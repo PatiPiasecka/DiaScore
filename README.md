@@ -1,148 +1,110 @@
-# Projekt-Python-2026
+# DiaScore
+
 [![Python Version](https://img.shields.io/badge/Python-3.13-blue.svg)](https://www.python.org/downloads/)
-[![Backend](https://img.shields.io/badge/Backend-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![Backend API](https://img.shields.io/badge/API-FastAPI-009688.svg)](https://fastapi.tiangolo.com/)
+[![ML](https://img.shields.io/badge/ML-PyTorch-red.svg)](https://pytorch.org/)
+[![Preprocessing](https://img.shields.io/badge/Preprocessing-scikit--learn-F7931E.svg)](https://scikit-learn.org/)
 [![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61dafb.svg)](https://react.dev/)
 [![Database](https://img.shields.io/badge/Database-SQLite%20%2B%20SQLAlchemy-003B57.svg)](https://www.sqlite.org/)
 
-# 🌍 DiaScore - Diabetes Risk Prediction Platform
+DiaScore is a full-stack application for diabetes risk estimation.
+It combines:
 
-DiaScore is a full-stack web application for diabetes risk assessment. It combines a FastAPI backend, a React frontend and a machine-learning pipeline that predicts the risk score, stores prediction history and handles missing measurements through imputation.
+* FastAPI API layer
+* PyTorch model inference
+* scikit-learn preprocessing (KNN imputer and feature scaling)
+* SQLite persistence
+* React + Vite frontend
 
-The project is built as an end-to-end example of integrating medical-style form input, ML inference, a relational database and a modern web UI.
+## Demo and Screenshots
 
-## ✨ Key Capabilities
-* **🩺 Predict:** Submit patient measurements and receive a diabetes risk score in real time.
-* **🧠 Impute:** Automatically fill missing measurements with the trained imputer when values are unavailable.
-* **📚 Track:** Store prediction history per user and review previous analyses in the app.
-* **📁 Export:** Download prediction history as CSV for further analysis.
-* **🔗 Full Stack:** Use a React/Vite frontend, FastAPI API, SQLite database and a trained ML model together.
+Repository currently includes app logo and full Docker setup.
+Demo video and UI screenshots can be attached in this section after running the stack locally.
 
----
+Suggested captures:
 
-## 📖 Project Overview
+* Main page
+* Medical questionnaire
+* Family interview section
+* Prediction result below threshold
+* Prediction result above threshold
+* History page
 
-### 🧾 User Flow
-* The user opens the DiaScore frontend and fills in the medical form.
-* Optional family-history details can be added through the interview panel.
-* The frontend sends the payload to the FastAPI backend at `/predict/`.
-* The backend imputes missing values, runs the ML model and stores the prediction in SQLite.
-* The user can later open the history view to inspect previous predictions and export them to CSV.
+## Project Scope
 
-### 🧬 Backend and ML Layer
-* The API is built with FastAPI and SQLAlchemy.
-* The backend loads a trained model and a serialized imputer from the `database/` directory.
-* Prediction records are stored in SQLite in the `patient_predictions` table.
-* Training data can be imported from `data/diabetes.csv` into the database.
-* The ML layer lives in `ml/src/` and includes data loading, training, evaluation and prediction utilities.
+DiaScore is not only a web API. The core backend logic includes the ML model and preprocessing pipeline.
+The project is built as an end-to-end system: data preparation, model training, inference, API integration, and UI for patient-facing prediction history.
 
-### 🖥️ Frontend Layer
-* The UI is built with React, Vite and React Router.
-* The home page contains the medical form, family interview section and prediction result card.
-* The history page shows previous predictions, highlights imputed values and supports CSV export.
-* The frontend expects the API URL in `VITE_API_URL`.
+## Main Features
 
-### 🗃️ Data and Storage
-* Training and reference data are kept in `data/`.
-* The application database is stored locally as SQLite in `database/diabetes.db`.
-* Serialized ML artifacts such as the imputer are stored alongside the backend files.
+* Predict diabetes risk from medical questionnaire values.
+* Impute missing values before inference.
+* Store prediction history in SQLite.
+* Display history in the frontend and export results to CSV.
+* Support single-record deletion and full history cleanup.
 
----
+## Run with Docker
 
-## 🚀 Features
+The project should be run through Docker Compose (not by starting frontend and backend separately).
 
-### ⚙️ Prediction Workflow
-* The app validates medical inputs before sending them to the API.
-* Missing values are handled automatically where the field can be imputed.
-* The response contains the risk score, diabetic-risk flag and the list of imputed fields.
+### Requirements
 
-### 📈 History View
-* Every prediction is saved under a user-specific identifier.
-* Users can browse earlier results in a table with dates and risk percentages.
-* Imputed values are shown as `N/A` in the history table to make preprocessing transparent.
+* Docker
+* Docker Compose plugin
 
-### 🧰 Development Tooling
-* Python dependencies are managed with `uv` through `pyproject.toml`.
-* The project includes automated tests for the API and database layer.
-* The repository has linting and formatting checks configured in CI.
-
----
-
-## 💻 Usage
-
-### 🛠️ Technical Requirements
-* Python 3.13
-* Node.js with npm
-* `uv` for Python dependency management
-
-### ▶️ Running the Backend
-1. Install dependencies:
+### Build images
 
 ```bash
-uv sync
+docker compose build
 ```
 
-2. Start the FastAPI application:
+### Start the full stack
 
 ```bash
-uv run fastapi dev api/main.py
+docker compose up
 ```
 
-The API will be available on `http://localhost:8000`.
-
-### ▶️ Running the Frontend
-1. Install frontend dependencies:
+Or build and start in one command:
 
 ```bash
-cd frontend
-npm install
+docker compose up --build
 ```
 
-2. Make sure the API URL is set in `frontend/.env`:
+### Access services
+
+* Frontend: http://localhost:3000
+* API: http://localhost:8000
+
+### Stop services
 
 ```bash
-VITE_API_URL=http://localhost:8000
+docker compose down
 ```
 
-3. Start the Vite development server:
+## Our Model
 
-```bash
-npm run dev
-```
+DiaScore uses a binary classification neural network implemented in PyTorch and trained on the Pima Indians Diabetes dataset.
+Before inference, missing clinical values are imputed (KNN imputer), then scaled with StandardScaler.
 
-The frontend will be available on the local Vite port.
+Model details, intended use, metrics and trade-offs are documented in:
 
-### 🧪 Optional Utilities
-* Import the diabetes dataset into SQLite:
+* [Model Card](docs/model_card.md)
 
-```bash
-uv run python database/main.py
-```
+Related ML notebooks:
 
-* Run the test suite:
+* [Data analysis notebook](ml/notebooks/00_data_analysis.ipynb)
+* [Data exploration and split notebook](ml/notebooks/01_data_exploration.ipynb)
 
-```bash
-uv run pytest -v
-```
+## Project Structure
 
-* Check formatting and linting:
+* `api/` - FastAPI app and endpoint schemas
+* `database/` - SQLAlchemy models, CRUD, preprocessing, database scripts
+* `frontend/` - React and Vite user interface
+* `ml/` - model training, evaluation and inference code
+* `data/` - dataset and split utilities
+* `docs/` - project documentation, including model card
 
-```bash
-uv run ruff check .
-uv run ruff format --check .
-```
+## Authors
 
----
-
-## 📂 Project Structure
-
-* `api/` - FastAPI entrypoint and request/response schemas.
-* `database/` - SQLAlchemy models, CRUD helpers, preprocessing and database setup.
-* `frontend/` - React/Vite UI for prediction input and history browsing.
-* `ml/` - Training, evaluation and inference utilities for the diabetes model.
-* `data/` - Source dataset and helper scripts for data preparation.
-
----
-
-## 👥 Authors
-* Patrycja Piasecka <img src="https://img.shields.io/badge/GitHub-PatiPiasecka-181717?logo=github" alt="GitHub">
-* Patrycja Zborowska <img src="https://img.shields.io/badge/GitHub-loschrix-181717?logo=github" alt="GitHub">
+* Patrycja Piasecka ([PatiPiasecka](https://github.com/PatiPiasecka))
+* Patrycja Zborowska ([loschrix](https://github.com/loschrix))
