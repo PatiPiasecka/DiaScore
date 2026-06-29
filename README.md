@@ -19,6 +19,15 @@ It combines:
 ## Demo and Screenshots
 
 <p align="center">
+	<video controls width="700">
+		<source src="docs/media/demo.mp4" type="video/mp4" />
+		Your browser does not support the video tag.
+	</video>
+	<br>
+	<em>A full demo walkthrough showing the main flow: medical questionnaire, family interview, prediction result, and history management.</em>
+</p>
+
+<p align="center">
 	<img src="docs/images/home-page.png" alt="DiaScore prediction home screen with medical questionnaire and family interview panel" width="700" />
 	<br>
 	<em>The main landing page shows the medical questionnaire on the left and the family interview card on the right. This is the entry point for entering clinical values before sending a prediction.</em>
@@ -47,9 +56,6 @@ It combines:
 	<br>
 	<em>The confirmation modal appears before deleting a single record or clearing history. It prevents accidental removal of stored predictions.</em>
 </p>
-
-
-If you want to include a demo video, place it in `docs/media/` and link it here as well.
 
 ## Project Scope
 
