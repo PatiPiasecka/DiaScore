@@ -198,3 +198,34 @@ def read_prediction(prediction_id: int, db: Session = Depends(get_db)):
     if prediction is None:
         raise HTTPException(status_code=404, detail="Prediction record not found")
     return prediction
+
+
+@app.delete(
+    "/predictions/{prediction_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["Data Management"],
+)
+def delete_prediction(prediction_id: int, db: Session = Depends(get_db)):
+    """Delete a user prediction by ID."""
+    prediction = crud.get_prediction(db, prediction_id=prediction_id)
+    if prediction is None:
+        raise HTTPException(status_code=404, detail="Prediction record not found")
+
+    deleted = crud.delete_prediction(db, prediction_id=prediction_id)
+    if not deleted:
+        raise HTTPException(status_code=500, detail="Failed to delete prediction")
+    return
+
+@app.delete(
+    "/predictions/user/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    tags=["Data Management"],
+)
+def delete_all_user_predictions(user_id: str, db: Session = Depends(get_db)):
+    """Delete all predictions for a specific user."""
+    try:
+        crud.delete_predictions_by_user(db, user_id=user_id)
+    except Exception as e:
+        logger.error("Failed to delete all predictions for user %s: %s", user_id, e)
+        raise HTTPException(status_code=500, detail="Failed to delete all predictions")
+    return
