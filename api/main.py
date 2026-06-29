@@ -216,6 +216,7 @@ def delete_prediction(prediction_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Failed to delete prediction")
     return
 
+
 @app.delete(
     "/predictions/user/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,

@@ -115,6 +115,7 @@ def delete_prediction(db: Session, prediction_id: int) -> bool:
         db.rollback()
         raise
 
+
 def delete_predictions_by_user(db: Session, user_id: str) -> int:
     """Delete all predictions for a specific user. Returns the number of deleted rows."""
     try:
