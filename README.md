@@ -18,17 +18,38 @@ It combines:
 
 ## Demo and Screenshots
 
-Repository currently includes app logo and full Docker setup.
-Demo video and UI screenshots can be attached in this section after running the stack locally.
+<p align="center">
+	<img src="docs/images/home-page.png" alt="DiaScore prediction home screen with medical questionnaire and family interview panel" width="700" />
+	<br>
+	<em>The main landing page shows the medical questionnaire on the left and the family interview card on the right. This is the entry point for entering clinical values before sending a prediction.</em>
+</p>
 
-Suggested captures:
+<p align="center">
+	<img src="docs/images/family-interview.png" alt="Family interview step for adding a relative and tagging relevant conditions" width="700" />
+	<br>
+	<em>The family interview screen lets the user add relatives, specify early onset diabetes, and mark associated conditions such as obesity, hypertension, or heart disease.</em>
+</p>
 
-* Main page
-* Medical questionnaire
-* Family interview section
-* Prediction result below threshold
-* Prediction result above threshold
-* History page
+<p align="center">
+	<img src="docs/images/prediction-result.png" alt="Prediction result gauge showing a low-risk score and next-step recommendations" width="700" />
+	<br>
+	<em>The prediction result view displays the final risk percentage, risk category, and follow-up recommendations in a dedicated summary panel.</em>
+</p>
+
+<p align="center">
+	<img src="docs/images/history-page.png" alt="History view with saved predictions, export action, and record deletion controls" width="700" />
+	<br>
+	<em>The history screen lists previous predictions, highlights the stored clinical values, and provides export and deletion actions for managing saved records.</em>
+</p>
+
+<p align="center">
+	<img src="docs/images/delete-confirmation.png" alt="Delete confirmation modal used before removing a saved prediction" width="700" />
+	<br>
+	<em>The confirmation modal appears before deleting a single record or clearing history. It prevents accidental removal of stored predictions.</em>
+</p>
+
+
+If you want to include a demo video, place it in `docs/media/` and link it here as well.
 
 ## Project Scope
 
