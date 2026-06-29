@@ -14,20 +14,20 @@ const History = () => {
   const executeAction = async () => {
     if (isDeletingAll) {
       setIsDeletingAll(false);
-      const ok = await deleteAllPredictions();
-      if (ok) {
+      const result = await deleteAllPredictions();
+      if (result.success) {
         toast.success('All records deleted successfully');
       } else {
-        toast.error('Failed to delete all records');
+        toast.error(result.message);
       }
     } else if (recordToDelete) {
       const id = recordToDelete;
-      setRecordToDelete(null); 
-      const ok = await deletePrediction(id);
-      if (ok) {
+      setRecordToDelete(null);
+      const result = await deletePrediction(id);
+      if (result.success) {
         toast.success('Record deleted successfully');
       } else {
-        toast.error('Failed to delete record');
+        toast.error(result.message);
       }
     }
   };
@@ -55,7 +55,7 @@ const History = () => {
         
         {!loading && !error && predictions.length > 0 && (
           <div className="w-full flex justify-end gap-4 mb-6">
-            {/* PRZYCISK DELETE ALL - Poprawiona ikona i obramowanie */}
+            {/* Delete All Button */}
             <button
               onClick={() => setIsDeletingAll(true)}
               className="px-5 py-2.5 bg-transparent border border-[#ff7b7b]/50 text-[#ff7b7b] hover:bg-[#ff7b7b] hover:text-black font-bold rounded-2xl text-sm transition-all duration-300 shadow-md flex items-center gap-2 cursor-pointer"
@@ -66,7 +66,7 @@ const History = () => {
               Delete All
             </button>
 
-            {/* PRZYCISK EXPORT */}
+            {/* Export Button */}
             <button
               onClick={() => {
                 downloadHistoryCSV(predictions);
