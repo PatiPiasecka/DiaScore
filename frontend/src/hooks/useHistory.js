@@ -1,6 +1,24 @@
 import { useState, useEffect } from 'react';
 import { getOrCreateUserId } from '../utils/user';
 
+const readResponseBody = async (response) => {
+  const text = await response.text();
+  if (!text.trim()) {
+    return null;
+  }
+
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      return JSON.parse(text);
+    } catch {
+      return text;
+    }
+  }
+
+  return text;
+};
+
 export const useHistory = () => {
   const [predictions, setPredictions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,22 +34,21 @@ export const useHistory = () => {
         method: 'DELETE',
       });
 
-      const contentType = response.headers.get('content-type') || '';
-      let responseData = null;
-      if (contentType.includes('application/json')) {
-        responseData = await response.json();
-      } else {
-        responseData = await response.text();
+      if (response.ok && response.status === 204) {
+        setPredictions((prev) => prev.filter((p) => p.id !== id));
+        return { success: true };
       }
 
-      if (!response.ok && response.status !== 204) {
-        const msg = responseData?.detail || responseData || 'Failed to delete prediction';
-        console.error(`[Delete Error] ${response.status} ${response.statusText}: ${msg}`);
-        return { success: false, message: `${response.status} ${response.statusText}: ${msg}` };
+      const responseData = await readResponseBody(response);
+
+      if (response.ok) {
+        setPredictions((prev) => prev.filter((p) => p.id !== id));
+        return { success: true };
       }
 
-      setPredictions((prev) => prev.filter((p) => p.id !== id));
-      return { success: true };
+      const msg = responseData?.detail || responseData || 'Failed to delete prediction';
+      console.error(`[Delete Error] ${response.status} ${response.statusText}: ${msg}`);
+      return { success: false, message: `${response.status} ${response.statusText}: ${msg}` };
     } catch (err) {
       console.error('Error deleting prediction:', err);
       return { success: false, message: err.message || 'Failed to delete prediction' };
@@ -50,22 +67,21 @@ export const useHistory = () => {
         method: 'DELETE',
       });
 
-      const contentType = response.headers.get('content-type') || '';
-      let responseData = null;
-      if (contentType.includes('application/json')) {
-        responseData = await response.json();
-      } else {
-        responseData = await response.text();
+      if (response.ok && response.status === 204) {
+        setPredictions([]);
+        return { success: true };
       }
 
-      if (!response.ok && response.status !== 204) {
-        const msg = responseData?.detail || responseData || 'Failed to delete all predictions';
-        console.error(`[Delete All Error] ${response.status} ${response.statusText}: ${msg}`);
-        return { success: false, message: `${response.status} ${response.statusText}: ${msg}` };
+      const responseData = await readResponseBody(response);
+
+      if (response.ok) {
+        setPredictions([]);
+        return { success: true };
       }
 
-      setPredictions([]);
-      return { success: true };
+      const msg = responseData?.detail || responseData || 'Failed to delete all predictions';
+      console.error(`[Delete All Error] ${response.status} ${response.statusText}: ${msg}`);
+      return { success: false, message: `${response.status} ${response.statusText}: ${msg}` };
     } catch (err) {
       console.error('Error deleting all predictions:', err);
       return { success: false, message: err.message || 'Failed to delete all predictions' };
@@ -84,13 +100,7 @@ export const useHistory = () => {
 
         const response = await fetch(`${apiUrl}/predictions/?user_id=${userId}`);
 
-        const contentType = response.headers.get('content-type') || '';
-        let responseData = null;
-        if (contentType.includes('application/json')) {
-          responseData = await response.json();
-        } else {
-          responseData = await response.text();
-        }
+        const responseData = await readResponseBody(response);
 
         if (!response.ok) {
           const msg = responseData?.detail || responseData || 'Failed to fetch prediction history';
