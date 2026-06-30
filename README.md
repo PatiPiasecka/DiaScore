@@ -19,10 +19,7 @@ It combines:
 ## Demo and Screenshots
 
 <p align="center">
-	<video controls width="700">
-		<source src="docs/media/demo.mp4" type="video/mp4" />
-		Your browser does not support the video tag.
-	</video>
+	<video src=https://github.com/user-attachments/assets/576a9bbc-7e00-4d49-8063-608ff3042514 width="800" controls autoplay loop muted></video>
 	<br>
 	<em>A full demo walkthrough showing the main flow: medical questionnaire, family interview, prediction result, and history management.</em>
 </p>
